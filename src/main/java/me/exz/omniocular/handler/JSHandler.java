@@ -16,6 +16,7 @@ import javax.script.Bindings;
 import javax.script.Invocable;
 import javax.script.ScriptContext;
 import javax.script.ScriptEngine;
+import javax.script.ScriptEngineFactory;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
 
@@ -130,33 +131,36 @@ public class JSHandler {
         return lastTips;
     }
 
-    // todo provide an function to detect player keyboard action. (hold shift, etc.)
     static void initEngine() {
-        // List<ScriptEngineFactory> engines = (new ScriptEngineManager()).getEngineFactories();
-        // for (ScriptEngineFactory f: engines) {
-        // System.out.println(f.getLanguageName()+" "+f.getEngineName()+" "+f.getNames().toString());
-        // }
         ScriptEngineManager manager = new ScriptEngineManager();
-        engine = manager.getEngineByName("graal.js");
+
+        List<ScriptEngineFactory> factories = manager.getEngineFactories();
+
+        try {
+            Class<?> clazz = Class.forName("com.oracle.truffle.js.scriptengine.GraalJSEngineFactory");
+            Object obj = clazz.newInstance();
+            manager.registerEngineName("graal.js", (ScriptEngineFactory) obj);
+            engine = manager.getEngineByName("graal.js");
+        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException ignored) {
+            engine = manager.getEngineByName("javascript");
+        }
+
+        for (ScriptEngineFactory f : factories) {
+            LogHelper.info("Available Engine: " + f.getLanguageName() + " " + f.getEngineName() + " " + f.getNames());
+        }
+
+        if (engine == null) {
+            throw new RuntimeException("no javascript engine");
+        }
+
         Bindings bindings = engine.getBindings(ScriptContext.ENGINE_SCOPE);
         bindings.put("polyglot.js.allowHostAccess", true);
         bindings.put("polyglot.js.allowHostClassLookup", (Predicate<String>) s -> true);
-        // engine= GraalJSScriptEngine.create(null,
-        // Context.newBuilder("js")
-        // .allowHostAccess(HostAccess.ALL)
-        // .allowHostClassLookup(s -> true)
-        //// .option("js.ecmascript-version","2022")
-        // );
-        if (engine == null) {
-            LogHelper.fatal("no javascript engine");
-        }
         setSpecialChar();
-        /* java 8 work around */
+
         try {
             engine.eval("load(\"nashorn:mozilla_compat.js\");");
-        } catch (ScriptException e) {
-            // e.printStackTrace();
-        }
+        } catch (ScriptException ignored) {}
         try {
             engine.eval("var _JSHandler = Java.type('me.exz.omniocular.handler.JSHandler');");
             engine.eval("function translate(t){return _JSHandler.translate(t)}");
