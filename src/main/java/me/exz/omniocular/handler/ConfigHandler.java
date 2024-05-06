@@ -6,9 +6,14 @@ import java.io.InputStream;
 import java.io.StringReader;
 import java.net.URISyntaxException;
 import java.net.URLDecoder;
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
-import java.util.*;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.regex.Matcher;
@@ -115,7 +120,7 @@ public class ConfigHandler {
             for (File configFile : configFiles) {
                 if (configFile.isFile()) {
                     try {
-                        List<String> lines = Files.readAllLines(configFile.toPath(), Charset.forName("UTF-8"));
+                        List<String> lines = Files.readAllLines(configFile.toPath(), StandardCharsets.UTF_8);
                         for (String line : lines) {
                             mergedConfig += line;
                         }

@@ -37,12 +37,12 @@ public class CommandReloadConfig extends CommandBase {
     @Override
     public void processCommand(ICommandSender sender, String[] array) {
         ConfigHandler.mergeConfig();
-        List playerList = MinecraftServer.getServer()
+        List<EntityPlayerMP> playerList = MinecraftServer.getServer()
             .getConfigurationManager().playerEntityList;
-        for (Object player : playerList) {
+        for (EntityPlayerMP player : playerList) {
             // ConfigMessageHandler.network.sendTo(new ConfigMessage(ConfigHandler.mergedConfig), (EntityPlayerMP)
             // player);
-            NetworkHelper.sendConfigString(ConfigHandler.mergedConfig, (EntityPlayerMP) player);
+            NetworkHelper.sendConfigString(ConfigHandler.mergedConfig, player);
         }
         LogHelper.info(sender.getCommandSenderName() + " commit a config reload.");
     }

@@ -32,7 +32,7 @@ public class CommandEntityName extends CommandBase {
         Minecraft minecraft = Minecraft.getMinecraft();
         MovingObjectPosition objectMouseOver = minecraft.objectMouseOver;
         if (objectMouseOver.typeOfHit == MovingObjectPosition.MovingObjectType.ENTITY) {
-            Class pointEntityClass = objectMouseOver.entityHit.getClass();
+            Class<?> pointEntityClass = objectMouseOver.entityHit.getClass();
             if (EntityList.classToStringMapping.containsKey(pointEntityClass)) {
                 player.addChatComponentMessage(
                     new ChatComponentText(EntityList.getEntityString(objectMouseOver.entityHit)));

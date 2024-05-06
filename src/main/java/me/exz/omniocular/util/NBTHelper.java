@@ -12,15 +12,15 @@ import com.google.common.cache.LoadingCache;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-@SuppressWarnings({ "unchecked", "CanBeFinal" })
+@SuppressWarnings({ "CanBeFinal" })
 public class NBTHelper {
 
     public static LoadingCache<Integer, NBTTagCompound> NBTCache = CacheBuilder.newBuilder()
         .maximumSize(1000)
-        .build(new CacheLoader<Integer, NBTTagCompound>() {
+        .build(new CacheLoader<>() {
 
             @Override
-            public NBTTagCompound load(Integer key) throws Exception {
+            public NBTTagCompound load(Integer key) {
                 return new NBTTagCompound();
             }
         });

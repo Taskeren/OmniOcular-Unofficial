@@ -24,16 +24,12 @@ public class NetworkHelper {
 
     static void recvConfigString(String string) {
         switch (string) {
-            case "__START__":
-                ConfigHandler.mergedConfig = "";
-                break;
-            case "__END__":
+            case "__START__" -> ConfigHandler.mergedConfig = "";
+            case "__END__" -> {
                 LogHelper.info("received config: " + ConfigHandler.mergedConfig);
                 ConfigHandler.parseConfigFiles();
-                break;
-            default:
-                ConfigHandler.mergedConfig += string;
-                break;
+            }
+            default -> ConfigHandler.mergedConfig += string;
         }
     }
 }

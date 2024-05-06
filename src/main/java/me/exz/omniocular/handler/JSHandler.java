@@ -2,12 +2,22 @@ package me.exz.omniocular.handler;
 
 import static me.exz.omniocular.util.NBTHelper.NBTCache;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
 import java.util.function.Predicate;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import javax.script.*;
+import javax.script.Bindings;
+import javax.script.Invocable;
+import javax.script.ScriptContext;
+import javax.script.ScriptEngine;
+import javax.script.ScriptEngineManager;
+import javax.script.ScriptException;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
@@ -30,10 +40,10 @@ public class JSHandler {
 
     static ScriptEngine engine;
     static HashSet<String> scriptSet = new HashSet<>();
-    private static List<String> lastTips = new ArrayList<>();
+    private static final List<String> lastTips = new ArrayList<>();
     private static int lastHash;
-    private static Map<String, String> fluidList = new HashMap<>();
-    private static Map<String, String> displayNameList = new HashMap<>();
+    private static final Map<String, String> fluidList = new HashMap<>();
+    private static final Map<String, String> displayNameList = new HashMap<>();
     private static EntityPlayer entityPlayer;
 
     static List<String> getBody(Map<Pattern, Node> patternMap, NBTTagCompound n, String id, EntityPlayer player) {
@@ -98,7 +108,7 @@ public class JSHandler {
                                     continue;
                                 }
                                 if (patternMap == ConfigHandler.tooltipPattern) {
-                                    tip = "\u00A77" + displayname + ": \u00A7f";
+                                    tip = "§7" + displayname + ": §f";
                                 } else {
                                     tip = ConfigHandler.settingList.get("displaynameTileentity")
                                         .replace("DISPLAYNAME", displayname)
@@ -163,7 +173,7 @@ public class JSHandler {
     }
 
     private static void setSpecialChar() {
-        String MCStyle = "\u00A7";
+        String MCStyle = "§";
         engine.put("BLACK", MCStyle + "0");
         engine.put("DBLUE", MCStyle + "1");
         engine.put("DGREEN", MCStyle + "2");
@@ -187,8 +197,8 @@ public class JSHandler {
         engine.put("UNDER", MCStyle + "n");
         engine.put("ITALIC", MCStyle + "o");
         engine.put("RESET", MCStyle + "r");
-        String WailaStyle = "\u00A4";
-        String WailaIcon = "\u00A5";
+        String WailaStyle = "¤";
+        String WailaIcon = "¥";
         engine.put("TAB", WailaStyle + WailaStyle + "a");
         engine.put("ALIGNRIGHT", WailaStyle + WailaStyle + "b");
         engine.put("ALIGNCENTER", WailaStyle + WailaStyle + "c");
