@@ -1,5 +1,7 @@
 package me.exz.omniocular;
 
+import java.util.Map;
+
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
@@ -11,12 +13,15 @@ import cpw.mods.fml.relauncher.Side;
 import me.exz.omniocular.proxy.IProxy;
 import me.exz.omniocular.reference.Reference;
 
-import java.util.Map;
-
-@SuppressWarnings({"UnusedParameters", "UnusedDeclaration"})
-@Mod(modid = Reference.MOD_ID, name = Reference.MOD_NAME, version = Reference.VERSION, dependencies = "required-after:Waila;required-after:NotEnoughItems")
+@SuppressWarnings({ "UnusedParameters", "UnusedDeclaration" })
+@Mod(
+    modid = Reference.MOD_ID,
+    name = Reference.MOD_NAME,
+    version = Reference.VERSION,
+    dependencies = "required-after:Waila;required-after:NotEnoughItems")
 
 public class OmniOcular {
+
     @SidedProxy(clientSide = Reference.CLIENT_PROXY_CLASS, serverSide = Reference.SERVER_PROXY_CLASS)
     private static IProxy proxy;
 
@@ -41,7 +46,7 @@ public class OmniOcular {
 
     @Mod.EventHandler
     void onServerStart(FMLServerStartingEvent event) {
-//        LogHelper.info("FMLServerStartingEvent");
+        // LogHelper.info("FMLServerStartingEvent");
         proxy.registerServerCommand(event);
     }
 
@@ -49,6 +54,5 @@ public class OmniOcular {
     public static boolean check(Map<String, String> remote, Side side) {
         return !(side == Side.SERVER && !remote.isEmpty() && !remote.containsKey(Reference.MOD_ID));
     }
-
 
 }

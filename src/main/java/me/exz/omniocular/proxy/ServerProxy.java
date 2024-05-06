@@ -14,7 +14,8 @@ public class ServerProxy extends CommonProxy {
     @Override
     public void registerWaila() {
         FMLInterModComms.sendMessage("Waila", "register", "me.exz.omniocular.handler.EntityHandler.callbackRegister");
-        FMLInterModComms.sendMessage("Waila", "register", "me.exz.omniocular.handler.TileEntityHandler.callbackRegister");
+        FMLInterModComms
+            .sendMessage("Waila", "register", "me.exz.omniocular.handler.TileEntityHandler.callbackRegister");
     }
 
     @Override

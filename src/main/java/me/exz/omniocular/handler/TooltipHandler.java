@@ -1,13 +1,14 @@
 package me.exz.omniocular.handler;
 
-import codechicken.nei.guihook.GuiContainerManager;
-import codechicken.nei.guihook.IContainerTooltipHandler;
+import java.util.List;
+
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 
-import java.util.List;
+import codechicken.nei.guihook.GuiContainerManager;
+import codechicken.nei.guihook.IContainerTooltipHandler;
 
 public class TooltipHandler implements IContainerTooltipHandler {
 
@@ -23,13 +24,20 @@ public class TooltipHandler implements IContainerTooltipHandler {
     }
 
     @Override
-    public List<String> handleItemTooltip(GuiContainer guiContainer, ItemStack itemStack, int i, int i2, List<String> currenttip) {
+    public List<String> handleItemTooltip(GuiContainer guiContainer, ItemStack itemStack, int i, int i2,
+        List<String> currenttip) {
         if (guiContainer != null && GuiContainerManager.shouldShowTooltip(guiContainer) && itemStack != null) {
             NBTTagCompound n = itemStack.getTagCompound();
 
-            //accessor.getTileEntity().writeToNBT(n);
+            // accessor.getTileEntity().writeToNBT(n);
             if (n != null) {
-                currenttip.addAll(1, JSHandler.getBody(ConfigHandler.tooltipPattern, n, Item.itemRegistry.getNameForObject(itemStack.getItem()), guiContainer.mc.thePlayer));
+                currenttip.addAll(
+                    1,
+                    JSHandler.getBody(
+                        ConfigHandler.tooltipPattern,
+                        n,
+                        Item.itemRegistry.getNameForObject(itemStack.getItem()),
+                        guiContainer.mc.thePlayer));
 
             }
         }

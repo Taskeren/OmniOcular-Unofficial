@@ -10,6 +10,7 @@ import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.util.MovingObjectPosition;
 
 public class CommandEntityName extends CommandBase {
+
     @Override
     public String getCommandName() {
         return "ooe";
@@ -33,7 +34,8 @@ public class CommandEntityName extends CommandBase {
         if (objectMouseOver.typeOfHit == MovingObjectPosition.MovingObjectType.ENTITY) {
             Class pointEntityClass = objectMouseOver.entityHit.getClass();
             if (EntityList.classToStringMapping.containsKey(pointEntityClass)) {
-                player.addChatComponentMessage(new ChatComponentText(EntityList.getEntityString(objectMouseOver.entityHit)));
+                player.addChatComponentMessage(
+                    new ChatComponentText(EntityList.getEntityString(objectMouseOver.entityHit)));
             }
         } else {
             player.addChatComponentMessage(new ChatComponentTranslation("omniocular.info.NotPointing"));

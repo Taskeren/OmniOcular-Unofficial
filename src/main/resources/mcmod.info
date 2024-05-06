@@ -1,10 +1,10 @@
 [
     {
-        "modid": "OmniOcular",
-        "name": "Omni Ocular",
+        "modid": "${modId}",
+        "name": "${modName}",
         "description": "Omni Ocular",
-        "version": "${version}",
-        "mcversion": "1.7.10",
+        "version": "${modVersion}",
+        "mcversion": "${minecraftVersion}",
         "logoFile": "",
         "url": "http://exz.me",
         "updateUrl": "",

@@ -1,15 +1,17 @@
 package me.exz.omniocular.util;
 
-import com.google.gson.*;
-import net.minecraft.nbt.*;
+import static me.exz.omniocular.util.NBTHelper.NBTCache;
+import static me.exz.omniocular.util.NBTHelper.gson;
 
 import java.lang.reflect.Type;
 import java.util.Map;
 
-import static me.exz.omniocular.util.NBTHelper.NBTCache;
-import static me.exz.omniocular.util.NBTHelper.gson;
+import net.minecraft.nbt.*;
+
+import com.google.gson.*;
 
 class NBTSerializer implements JsonSerializer<NBTBase> {
+
     @Override
     public JsonElement serialize(NBTBase src, Type typeOfSrc, JsonSerializationContext context) {
         switch (src.getId()) {
@@ -47,7 +49,7 @@ class NBTSerializer implements JsonSerializer<NBTBase> {
                 int hashCode = nbtTagCompound.hashCode();
                 NBTCache.put(hashCode, nbtTagCompound);
                 jsonObject.add("hashCode", new JsonPrimitive(hashCode));
-                //noinspection unchecked
+                // noinspection unchecked
                 Map<String, NBTBase> tagMap = nbtTagCompound.tagMap;
                 for (Map.Entry<String, NBTBase> entry : tagMap.entrySet()) {
                     jsonObject.add(entry.getKey(), gson.toJsonTree(entry.getValue()));

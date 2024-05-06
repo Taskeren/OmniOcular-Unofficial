@@ -11,6 +11,7 @@ import me.exz.omniocular.network.ConfigMessage;
 import me.exz.omniocular.network.ConfigMessageHandler;
 
 public abstract class CommonProxy implements IProxy {
+
     @Override
     public void registerServerCommand(FMLServerStartingEvent event) {
         event.registerServerCommand(new CommandReloadConfig());
@@ -18,7 +19,9 @@ public abstract class CommonProxy implements IProxy {
 
     @Override
     public void registerEvent() {
-        FMLCommonHandler.instance().bus().register(new ConfigEvent());
+        FMLCommonHandler.instance()
+            .bus()
+            .register(new ConfigEvent());
     }
 
     @Override
@@ -31,6 +34,6 @@ public abstract class CommonProxy implements IProxy {
     public void initConfig(FMLPreInitializationEvent event) {
         ConfigHandler.minecraftConfigDirectory = event.getModConfigurationDirectory();
         ConfigHandler.initConfigFiles();
-        //JSHandler.initEngine();
+        // JSHandler.initEngine();
     }
 }

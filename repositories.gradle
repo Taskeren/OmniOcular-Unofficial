@@ -1,0 +1,12 @@
+// Add any additional repositories for your dependencies here.
+
+repositories {
+    maven {
+        name "ProfMobius"
+        url "http://mobiusstrip.eu/maven"
+    }
+    maven {
+        name 'ChickenBones'
+        url "http://chickenbones.net/maven/"
+    }
+}

@@ -1,15 +1,16 @@
 package me.exz.omniocular.asm;
 
-import cpw.mods.fml.relauncher.IFMLLoadingPlugin;
-
 import java.util.Map;
+
+import cpw.mods.fml.relauncher.IFMLLoadingPlugin;
 
 @IFMLLoadingPlugin.MCVersion("1.7.10")
 public class Core implements IFMLLoadingPlugin {
+
     @Override
     public String[] getASMTransformerClass() {
-        //LogHelper.info("getASMTransformerClass");
-        return new String[]{Transformer.class.getName()};
+        // LogHelper.info("getASMTransformerClass");
+        return new String[] { Transformer.class.getName() };
     }
 
     @Override

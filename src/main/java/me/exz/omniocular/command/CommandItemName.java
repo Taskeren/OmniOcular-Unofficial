@@ -9,6 +9,7 @@ import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.ChatComponentTranslation;
 
 public class CommandItemName extends CommandBase {
+
     @Override
     public String getCommandName() {
         return "ooi";

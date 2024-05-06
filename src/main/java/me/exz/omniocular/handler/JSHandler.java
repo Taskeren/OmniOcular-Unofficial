@@ -1,7 +1,14 @@
 package me.exz.omniocular.handler;
 
-import me.exz.omniocular.util.LogHelper;
-import me.exz.omniocular.util.NBTHelper;
+import static me.exz.omniocular.util.NBTHelper.NBTCache;
+
+import java.util.*;
+import java.util.function.Predicate;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import javax.script.*;
+
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -10,20 +17,17 @@ import net.minecraft.util.StatCollector;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
+
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import javax.script.*;
-import java.util.*;
-import java.util.function.Predicate;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import me.exz.omniocular.util.LogHelper;
+import me.exz.omniocular.util.NBTHelper;
 
-import static me.exz.omniocular.util.NBTHelper.NBTCache;
-
-@SuppressWarnings({"CanBeFinal", "UnusedDeclaration"})
+@SuppressWarnings({ "CanBeFinal", "UnusedDeclaration" })
 public class JSHandler {
+
     static ScriptEngine engine;
     static HashSet<String> scriptSet = new HashSet<>();
     private static List<String> lastTips = new ArrayList<>();
@@ -37,7 +41,7 @@ public class JSHandler {
         if (n.hashCode() != lastHash || player.worldObj.getTotalWorldTime() % 10 == 0) {
             lastHash = n.hashCode();
             lastTips.clear();
-            //LogHelper.info(NBTHelper.NBT2json(n));
+            // LogHelper.info(NBTHelper.NBT2json(n));
             try {
                 String json = "var nbt=" + NBTHelper.NBT2json(n) + ";";
                 JSHandler.engine.eval(json);
@@ -45,20 +49,31 @@ public class JSHandler {
                 e.printStackTrace();
             }
             for (Map.Entry<Pattern, Node> entry : patternMap.entrySet()) {
-                Matcher matcher = entry.getKey().matcher(id);
+                Matcher matcher = entry.getKey()
+                    .matcher(id);
                 if (matcher.matches()) {
                     Element item = (Element) entry.getValue();
-//                    if (item.getElementsByTagName("head").getLength() > 0) {
-//                        Node head = item.getElementsByTagName("head").item(0);
-//                    }
-                    if (item.getElementsByTagName("line").getLength() > 0) {
+                    // if (item.getElementsByTagName("head").getLength() > 0) {
+                    // Node head = item.getElementsByTagName("head").item(0);
+                    // }
+                    if (item.getElementsByTagName("line")
+                        .getLength() > 0) {
                         String tip;
                         NodeList lines = item.getElementsByTagName("line");
                         for (int i = 0; i < lines.getLength(); i++) {
                             Node line = lines.item(i);
                             String displayname = "";
-                            if (line.getAttributes().getNamedItem("displayname") != null && !line.getAttributes().getNamedItem("displayname").getTextContent().trim().isEmpty()) {
-                                displayname = StatCollector.translateToLocal(line.getAttributes().getNamedItem("displayname").getTextContent());
+                            if (line.getAttributes()
+                                .getNamedItem("displayname") != null
+                                && !line.getAttributes()
+                                    .getNamedItem("displayname")
+                                    .getTextContent()
+                                    .trim()
+                                    .isEmpty()) {
+                                displayname = StatCollector.translateToLocal(
+                                    line.getAttributes()
+                                        .getNamedItem("displayname")
+                                        .getTextContent());
                             }
                             String functionContent = line.getTextContent();
                             String hash = "S" + NBTHelper.MD5(functionContent);
@@ -77,20 +92,21 @@ public class JSHandler {
                             Invocable invoke = (Invocable) JSHandler.engine;
                             try {
                                 String result = String.valueOf(invoke.invokeFunction(hash, ""));
-                                if (result.equals("__ERROR__") || result.equals("null") || result.equals("undefined")
-                                        || result.equals("NaN")) {
+                                if (result.equals("__ERROR__") || result.equals("null")
+                                    || result.equals("undefined")
+                                    || result.equals("NaN")) {
                                     continue;
                                 }
                                 if (patternMap == ConfigHandler.tooltipPattern) {
                                     tip = "\u00A77" + displayname + ": \u00A7f";
                                 } else {
                                     tip = ConfigHandler.settingList.get("displaynameTileentity")
-                                            .replace("DISPLAYNAME", displayname)
-                                            .replace("RETURN", result);
+                                        .replace("DISPLAYNAME", displayname)
+                                        .replace("RETURN", result);
                                 }
                             } catch (Exception e) {
                                 continue;
-                                //e.printStackTrace();
+                                // e.printStackTrace();
                             }
                             if (tip.equals("__ERROR__")) {
                                 continue;
@@ -104,24 +120,24 @@ public class JSHandler {
         return lastTips;
     }
 
-    //todo provide an function to detect player keyboard action. (hold shift, etc.)
+    // todo provide an function to detect player keyboard action. (hold shift, etc.)
     static void initEngine() {
-//        List<ScriptEngineFactory> engines = (new ScriptEngineManager()).getEngineFactories();
-//        for (ScriptEngineFactory f: engines) {
-//            System.out.println(f.getLanguageName()+" "+f.getEngineName()+" "+f.getNames().toString());
-//        }
+        // List<ScriptEngineFactory> engines = (new ScriptEngineManager()).getEngineFactories();
+        // for (ScriptEngineFactory f: engines) {
+        // System.out.println(f.getLanguageName()+" "+f.getEngineName()+" "+f.getNames().toString());
+        // }
         ScriptEngineManager manager = new ScriptEngineManager();
         engine = manager.getEngineByName("graal.js");
         Bindings bindings = engine.getBindings(ScriptContext.ENGINE_SCOPE);
         bindings.put("polyglot.js.allowHostAccess", true);
         bindings.put("polyglot.js.allowHostClassLookup", (Predicate<String>) s -> true);
-//        engine= GraalJSScriptEngine.create(null,
-//                Context.newBuilder("js")
-//                        .allowHostAccess(HostAccess.ALL)
-//                        .allowHostClassLookup(s -> true)
-////                        .option("js.ecmascript-version","2022")
-//        );
-        if (engine==null){
+        // engine= GraalJSScriptEngine.create(null,
+        // Context.newBuilder("js")
+        // .allowHostAccess(HostAccess.ALL)
+        // .allowHostClassLookup(s -> true)
+        //// .option("js.ecmascript-version","2022")
+        // );
+        if (engine == null) {
             LogHelper.fatal("no javascript engine");
         }
         setSpecialChar();
@@ -129,7 +145,7 @@ public class JSHandler {
         try {
             engine.eval("load(\"nashorn:mozilla_compat.js\");");
         } catch (ScriptException e) {
-            //e.printStackTrace();
+            // e.printStackTrace();
         }
         try {
             engine.eval("var _JSHandler = Java.type('me.exz.omniocular.handler.JSHandler');");
@@ -179,15 +195,15 @@ public class JSHandler {
         engine.put("HEART", WailaStyle + WailaIcon + "a");
         engine.put("HHEART", WailaStyle + WailaIcon + "b");
         engine.put("EHEART", WailaStyle + WailaIcon + "c");
-//        LogHelper.info("Special Char loaded");
+        // LogHelper.info("Special Char loaded");
     }
 
     public static String translate(String t) {
         return StatCollector.translateToLocal(t);
     }
-    
+
     public static String translateFormatted(String t, Object[] format) {
-    	return StatCollector.translateToLocalFormatted(t, format);
+        return StatCollector.translateToLocalFormatted(t, format);
     }
 
     public static String playerHolding() {

@@ -1,8 +1,9 @@
 package me.exz.omniocular.network;
 
+import net.minecraft.entity.player.EntityPlayerMP;
+
 import me.exz.omniocular.handler.ConfigHandler;
 import me.exz.omniocular.util.LogHelper;
-import net.minecraft.entity.player.EntityPlayerMP;
 
 public class NetworkHelper {
 

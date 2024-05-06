@@ -1,11 +1,13 @@
 package me.exz.omniocular.util;
 
+import org.apache.logging.log4j.Level;
+
 import cpw.mods.fml.common.FMLLog;
 import me.exz.omniocular.reference.Reference;
-import org.apache.logging.log4j.Level;
 
 @SuppressWarnings("UnusedDeclaration")
 public class LogHelper {
+
     private static void log(Level logLevel, Object object) {
         FMLLog.log(Reference.MOD_NAME, logLevel, "%s", String.valueOf(object));
     }
