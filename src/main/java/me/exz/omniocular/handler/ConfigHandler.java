@@ -19,8 +19,10 @@ import java.util.jar.JarFile;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import javax.script.ScriptException;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -29,6 +31,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
 
 import cpw.mods.fml.common.Loader;
 import me.exz.omniocular.OmniOcular;
@@ -153,13 +156,14 @@ public class ConfigHandler {
 
     public static void parseConfigFiles() {
         // System.out.println(mergedConfig);
+
+        JSHandler.initEngine();
+        entityPattern.clear();
+        tileEntityPattern.clear();
+        tooltipPattern.clear();
+        settingList.clear();
+        JSHandler.scriptSet.clear();
         try {
-            JSHandler.initEngine();
-            entityPattern.clear();
-            tileEntityPattern.clear();
-            tooltipPattern.clear();
-            settingList.clear();
-            JSHandler.scriptSet.clear();
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
             DocumentBuilder builder = factory.newDocumentBuilder();
             Document doc = builder.parse(new InputSource(new StringReader(mergedConfig)));
@@ -220,8 +224,10 @@ public class ConfigHandler {
                     }
                 }
             }
-        } catch (Exception e) {
+        } catch (ScriptException | ParserConfigurationException | IOException | SAXException e) {
+            LogHelper.warn("An error occurred while processing the configuration file!");
             e.printStackTrace();
         }
+
     }
 }

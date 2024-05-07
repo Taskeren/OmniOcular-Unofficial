@@ -2,19 +2,19 @@ package me.exz.omniocular.handler;
 
 import static me.exz.omniocular.util.NBTHelper.NBTCache;
 
+import java.io.File;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Predicate;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import javax.script.Bindings;
 import javax.script.Invocable;
-import javax.script.ScriptContext;
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineFactory;
 import javax.script.ScriptEngineManager;
@@ -136,30 +136,49 @@ public class JSHandler {
     }
 
     static void initEngine() {
-        ScriptEngineManager manager = new ScriptEngineManager();
 
-        List<ScriptEngineFactory> factories = manager.getEngineFactories();
+        ScriptEngineManager manager = null;
+        if (Double.parseDouble(System.getProperty("java.class.version")) >= 55.0) {
 
-        try {
-            Class<?> clazz = Class.forName("com.oracle.truffle.js.scriptengine.GraalJSEngineFactory");
-            Object obj = clazz.newInstance();
-            manager.registerEngineName("graal.js", (ScriptEngineFactory) obj);
-            engine = manager.getEngineByName("graal.js");
-        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException ignored) {
-            engine = manager.getEngineByName("javascript");
+            File jarPath = new File(System.getProperty("user.dir") + "/mods/oo/nashorn-core-15.4.jar");
+            LogHelper.info("nashorn path: " + jarPath);
+            ClassLoader classLoader = ClassLoader.getSystemClassLoader();
+
+            if (classLoader.getClass()
+                .getName()
+                .equals("jdk.internal.loader.ClassLoaders$AppClassLoader")) {
+
+                for (Method method : classLoader.getClass()
+                    .getDeclaredMethods()) {
+                    if (method.getName()
+                        .equals("appendToClassPathForInstrumentation")) {
+                        method.setAccessible(true);
+                        try {
+                            method.invoke(classLoader, jarPath.toString());
+                        } catch (IllegalAccessException | InvocationTargetException e) {
+                            throw new RuntimeException(e);
+                        }
+                        break;
+                    }
+                }
+                manager = new ScriptEngineManager(classLoader);
+            }
         }
 
+        if (manager == null) manager = new ScriptEngineManager();
+
+        List<ScriptEngineFactory> factories = manager.getEngineFactories();
         for (ScriptEngineFactory f : factories) {
             LogHelper.info("Available Engine: " + f.getLanguageName() + " " + f.getEngineName() + " " + f.getNames());
         }
 
+        engine = manager.getEngineByName("js");
+
         if (engine == null) {
-            throw new RuntimeException("no javascript engine");
+            LogHelper.fatal("no javascript engine.");
+            throw new RuntimeException("no javascript engine.");
         }
 
-        Bindings bindings = engine.getBindings(ScriptContext.ENGINE_SCOPE);
-        bindings.put("polyglot.js.allowHostAccess", true);
-        bindings.put("polyglot.js.allowHostClassLookup", (Predicate<String>) s -> true);
         setSpecialChar();
 
         try {
