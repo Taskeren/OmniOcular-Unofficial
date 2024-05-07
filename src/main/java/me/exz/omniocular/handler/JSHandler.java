@@ -33,6 +33,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+import me.exz.omniocular.util.CacheMap;
 import me.exz.omniocular.util.LogHelper;
 import me.exz.omniocular.util.NBTHelper;
 
@@ -41,8 +42,7 @@ public class JSHandler {
 
     static ScriptEngine engine;
     static HashSet<String> scriptSet = new HashSet<>();
-    private static Map<NBTTagCompound, List<String>> cache = new HashMap<>();
-    private static List<NBTTagCompound> cacheTime = new ArrayList<>(201);
+    private static final CacheMap<NBTTagCompound, List<String>> cache1 = new CacheMap<>(200);
 
     private static final Map<String, String> fluidList = new HashMap<>();
     private static final Map<String, String> displayNameList = new HashMap<>();
@@ -50,7 +50,7 @@ public class JSHandler {
 
     static List<String> getBody(Map<Pattern, Node> patternMap, NBTTagCompound n, String id, EntityPlayer player) {
         entityPlayer = player;
-        if (!cache.containsKey(n) || (player.worldObj.getTotalWorldTime() & 16) == 0) {
+        if (!cache1.contains(n)) {
             // LogHelper.info(NBTHelper.NBT2json(n));
             try {
                 String json = "var nbt=" + NBTHelper.NBT2json(n) + ";";
@@ -59,21 +59,9 @@ public class JSHandler {
                 e.printStackTrace();
             }
 
-            if (cache.size() > 200) {
-                Map<NBTTagCompound, List<String>> map1 = new HashMap<>();
-                List<NBTTagCompound> list1 = new ArrayList<>(201);
-                for (int i = cacheTime.size() - 50; i < cacheTime.size(); i++) {
-                    NBTTagCompound nbtTagCompound = cacheTime.get(i);
-                    map1.put(nbtTagCompound, cache.get(nbtTagCompound));
-                    list1.add(n);
-                }
-                cache = map1;
-                cacheTime = list1;
-            }
-
             List<String> tips = new ArrayList<>();
-            cache.put(n, tips);
-            cacheTime.add(n);
+
+            cache1.put(n, tips);
 
             for (Map.Entry<Pattern, Node> entry : patternMap.entrySet()) {
                 Matcher matcher = entry.getKey()
@@ -144,7 +132,7 @@ public class JSHandler {
                 }
             }
             return tips;
-        } else return cache.get(n);
+        } else return cache1.get(n);
     }
 
     static void initEngine() {
@@ -190,6 +178,8 @@ public class JSHandler {
         } catch (ScriptException e) {
             e.printStackTrace();
         }
+
+        cache1.clear();
     }
 
     private static void setSpecialChar() {
