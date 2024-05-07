@@ -50,19 +50,26 @@ public class TileEntityHandler implements IWailaDataProvider {
         return currenttip;
     }
 
-    // TODO workaround for drops / support drops
+    private int lastItemStackHash;
+    private List<String> tips;
+
     @Override
     public List<String> getWailaBody(ItemStack itemStack, List<String> currenttip, IWailaDataAccessor accessor,
         IWailaConfigHandler config) {
-        NBTTagCompound n = accessor.getNBTData();
-        if (n != null) {
-            List<String> tips = JSHandler
-                .getBody(ConfigHandler.tileEntityPattern, n, n.getString("id"), accessor.getPlayer());
-            for (String tip : tips) {
-                ListHelper.AddToList(currenttip, tip);
+        if (itemStack.hashCode() != lastItemStackHash || (accessor.getWorld()
+            .getTotalWorldTime() & 16) == 0) {
+            NBTTagCompound n = accessor.getNBTData();
+            if (n != null) {
+                List<String> tips = JSHandler
+                    .getBody(ConfigHandler.tileEntityPattern, n, n.getString("id"), accessor.getPlayer());
+                for (String tip : tips) {
+                    ListHelper.AddToList(currenttip, tip);
+                }
             }
-        }
-        return currenttip;
+            lastItemStackHash = itemStack.hashCode();
+            tips = currenttip;
+            return currenttip;
+        } else return tips;
     }
 
     @Override

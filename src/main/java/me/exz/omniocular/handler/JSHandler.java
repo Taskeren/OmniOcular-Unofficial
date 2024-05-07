@@ -41,17 +41,16 @@ public class JSHandler {
 
     static ScriptEngine engine;
     static HashSet<String> scriptSet = new HashSet<>();
-    private static final List<String> lastTips = new ArrayList<>();
-    private static int lastHash;
+    private static Map<NBTTagCompound, List<String>> cache = new HashMap<>();
+    private static List<NBTTagCompound> cacheTime = new ArrayList<>(201);
+
     private static final Map<String, String> fluidList = new HashMap<>();
     private static final Map<String, String> displayNameList = new HashMap<>();
     private static EntityPlayer entityPlayer;
 
     static List<String> getBody(Map<Pattern, Node> patternMap, NBTTagCompound n, String id, EntityPlayer player) {
         entityPlayer = player;
-        if (n.hashCode() != lastHash || player.worldObj.getTotalWorldTime() % 10 == 0) {
-            lastHash = n.hashCode();
-            lastTips.clear();
+        if (!cache.containsKey(n) || (player.worldObj.getTotalWorldTime() & 16) == 0) {
             // LogHelper.info(NBTHelper.NBT2json(n));
             try {
                 String json = "var nbt=" + NBTHelper.NBT2json(n) + ";";
@@ -59,6 +58,23 @@ public class JSHandler {
             } catch (ScriptException e) {
                 e.printStackTrace();
             }
+
+            if (cache.size() > 200) {
+                Map<NBTTagCompound, List<String>> map1 = new HashMap<>();
+                List<NBTTagCompound> list1 = new ArrayList<>(201);
+                for (int i = cacheTime.size() - 50; i < cacheTime.size(); i++) {
+                    NBTTagCompound nbtTagCompound = cacheTime.get(i);
+                    map1.put(nbtTagCompound, cache.get(nbtTagCompound));
+                    list1.add(n);
+                }
+                cache = map1;
+                cacheTime = list1;
+            }
+
+            List<String> tips = new ArrayList<>();
+            cache.put(n, tips);
+            cacheTime.add(n);
+
             for (Map.Entry<Pattern, Node> entry : patternMap.entrySet()) {
                 Matcher matcher = entry.getKey()
                     .matcher(id);
@@ -122,13 +138,13 @@ public class JSHandler {
                             if (tip.equals("__ERROR__")) {
                                 continue;
                             }
-                            lastTips.addAll(Arrays.asList(tip.split("\n")));
+                            tips.addAll(Arrays.asList(tip.split("\n")));
                         }
                     }
                 }
             }
-        }
-        return lastTips;
+            return tips;
+        } else return cache.get(n);
     }
 
     static void initEngine() {

@@ -35,19 +35,27 @@ public class EntityHandler implements IWailaEntityProvider {
         return currenttip;
     }
 
+    private int lastEntityHash;
+    private List<String> tips;
+
     @Override
     public List<String> getWailaBody(Entity entity, List<String> currenttip, IWailaEntityAccessor accessor,
         IWailaConfigHandler config) {
-        NBTTagCompound n = accessor.getNBTData();
-        if (n != null) {
-            currenttip.addAll(
-                JSHandler.getBody(
-                    ConfigHandler.entityPattern,
-                    n,
-                    EntityList.getEntityString(accessor.getEntity()),
-                    accessor.getPlayer()));
-        }
-        return currenttip;
+        if (entity.hashCode() != lastEntityHash || (entity.worldObj.getTotalWorldTime() & 16) == 0) {
+            NBTTagCompound n = accessor.getNBTData();
+            if (n != null) {
+                currenttip.addAll(
+                    JSHandler.getBody(
+                        ConfigHandler.entityPattern,
+                        n,
+                        EntityList.getEntityString(accessor.getEntity()),
+                        accessor.getPlayer()));
+            }
+            lastEntityHash = entity.hashCode();
+            tips = currenttip;
+            return currenttip;
+        } else return tips;
+
     }
 
     @Override

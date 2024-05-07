@@ -5,7 +5,7 @@ import cpw.mods.fml.common.event.FMLServerStartingEvent;
 
 public interface IProxy {
 
-    void registerEvent();
+    void registerEventHandler();
 
     void registerClientCommand();
 
