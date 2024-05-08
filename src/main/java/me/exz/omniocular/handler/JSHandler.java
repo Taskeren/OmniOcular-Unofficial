@@ -33,7 +33,10 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import me.exz.omniocular.util.CacheMap;
+import com.google.common.cache.CacheBuilder;
+import com.google.common.cache.CacheLoader;
+import com.google.common.cache.LoadingCache;
+
 import me.exz.omniocular.util.LogHelper;
 import me.exz.omniocular.util.NBTHelper;
 
@@ -42,7 +45,17 @@ public class JSHandler {
 
     static ScriptEngine engine;
     static HashSet<String> scriptSet = new HashSet<>();
-    private static final CacheMap<NBTTagCompound, List<String>> cache1 = new CacheMap<>(200);
+
+    static List<String> EMPTY_LIST = new ArrayList<>();
+    static LoadingCache<Integer, List<String>> cache = CacheBuilder.newBuilder()
+        .maximumSize(200)
+        .build(new CacheLoader<>() {
+
+            @Override
+            public List<String> load(Integer key) {
+                return EMPTY_LIST;
+            }
+        });
 
     private static final Map<String, String> fluidList = new HashMap<>();
     private static final Map<String, String> displayNameList = new HashMap<>();
@@ -50,8 +63,11 @@ public class JSHandler {
 
     static List<String> getBody(Map<Pattern, Node> patternMap, NBTTagCompound n, String id, EntityPlayer player) {
         entityPlayer = player;
-        if (!cache1.contains(n)) {
-            // LogHelper.info(NBTHelper.NBT2json(n));
+        int hashCode = n.toString()
+            .hashCode();
+        List<String> list = cache.getUnchecked(hashCode);
+        if (EMPTY_LIST.equals(list)) {
+
             try {
                 String json = "var nbt=" + NBTHelper.NBT2json(n) + ";";
                 JSHandler.engine.eval(json);
@@ -61,7 +77,7 @@ public class JSHandler {
 
             List<String> tips = new ArrayList<>();
 
-            cache1.put(n, tips);
+            cache.put(hashCode, tips);
 
             for (Map.Entry<Pattern, Node> entry : patternMap.entrySet()) {
                 Matcher matcher = entry.getKey()
@@ -132,7 +148,7 @@ public class JSHandler {
                 }
             }
             return tips;
-        } else return cache1.get(n);
+        } else return list;
     }
 
     static void initEngine() {
@@ -198,7 +214,6 @@ public class JSHandler {
             e.printStackTrace();
         }
 
-        cache1.clear();
     }
 
     private static void setSpecialChar() {

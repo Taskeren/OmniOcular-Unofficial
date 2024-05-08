@@ -3,8 +3,7 @@ package me.exz.omniocular.proxy;
 import net.minecraftforge.client.ClientCommandHandler;
 
 import codechicken.nei.guihook.GuiContainerManager;
-import me.exz.omniocular.command.CommandEntityName;
-import me.exz.omniocular.command.CommandItemName;
+import me.exz.omniocular.command.CommandLookFor;
 import me.exz.omniocular.handler.ConfigHandler;
 import me.exz.omniocular.handler.TooltipHandler;
 import me.exz.omniocular.util.LogHelper;
@@ -14,8 +13,7 @@ public class ClientProxy extends CommonProxy {
 
     @Override
     public void registerClientCommand() {
-        ClientCommandHandler.instance.registerCommand(new CommandItemName());
-        ClientCommandHandler.instance.registerCommand(new CommandEntityName());
+        ClientCommandHandler.instance.registerCommand(new CommandLookFor());
     }
 
     @Override

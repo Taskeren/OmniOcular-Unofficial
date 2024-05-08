@@ -13,7 +13,6 @@ import mcp.mobius.waila.api.IWailaConfigHandler;
 import mcp.mobius.waila.api.IWailaDataAccessor;
 import mcp.mobius.waila.api.IWailaDataProvider;
 import mcp.mobius.waila.api.IWailaRegistrar;
-import me.exz.omniocular.util.ListHelper;
 
 public class TileEntityHandler implements IWailaDataProvider {
 
@@ -51,25 +50,25 @@ public class TileEntityHandler implements IWailaDataProvider {
     }
 
     private int lastItemStackHash;
-    private List<String> tips;
+    private List<String> lastTps;
 
     @Override
     public List<String> getWailaBody(ItemStack itemStack, List<String> currenttip, IWailaDataAccessor accessor,
         IWailaConfigHandler config) {
-        if (itemStack.hashCode() != lastItemStackHash || (accessor.getWorld()
-            .getTotalWorldTime() & 16) == 0) {
-            NBTTagCompound n = accessor.getNBTData();
-            if (n != null) {
-                List<String> tips = JSHandler
+        NBTTagCompound n = accessor.getNBTData();
+        if (n != null) {
+            int hashCode = n.toString()
+                .hashCode();
+            if (hashCode != lastItemStackHash || (accessor.getWorld()
+                .getTotalWorldTime() & ((1 << 5) - 1)) == 1) {
+                lastItemStackHash = hashCode;
+
+                lastTps = JSHandler
                     .getBody(ConfigHandler.tileEntityPattern, n, n.getString("id"), accessor.getPlayer());
-                for (String tip : tips) {
-                    ListHelper.AddToList(currenttip, tip);
-                }
             }
-            lastItemStackHash = itemStack.hashCode();
-            tips = currenttip;
-            return currenttip;
-        } else return tips;
+            currenttip.addAll(lastTps);
+        }
+        return currenttip;
     }
 
     @Override
