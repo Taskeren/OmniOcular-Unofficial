@@ -73,7 +73,7 @@ public class ScriptEngineHandler {
             }
 
             if (succeed) {
-                File jarFile = new File(Core.minecraftDir, "/mods/oo/z-core-15.4.jar");
+                File jarFile = new File(Core.minecraftDir, "/mods/oo/nashorn-core-15.4.jar");
                 LogHelper.info("Nashorn core path: " + jarFile);
                 if (!jarFile.exists() || !jarFile.isFile()) {
                     LogHelper.info("Nashorn core not exist!");
