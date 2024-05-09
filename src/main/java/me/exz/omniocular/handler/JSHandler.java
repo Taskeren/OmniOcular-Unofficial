@@ -2,9 +2,6 @@ package me.exz.omniocular.handler;
 
 import static me.exz.omniocular.util.NBTHelper.NBTCache;
 
-import java.io.File;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -16,8 +13,6 @@ import java.util.regex.Pattern;
 
 import javax.script.Invocable;
 import javax.script.ScriptEngine;
-import javax.script.ScriptEngineFactory;
-import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
 
 import net.minecraft.entity.player.EntityPlayer;
@@ -153,42 +148,7 @@ public class JSHandler {
 
     static void initEngine() {
 
-        ScriptEngineManager manager = null;
-        if (Double.parseDouble(System.getProperty("java.class.version")) >= 55.0) {
-
-            File jarPath = new File(System.getProperty("user.dir") + "/mods/oo/nashorn-core-15.4.jar");
-            LogHelper.info("nashorn path: " + jarPath);
-            ClassLoader classLoader = ClassLoader.getSystemClassLoader();
-
-            if (classLoader.getClass()
-                .getName()
-                .equals("jdk.internal.loader.ClassLoaders$AppClassLoader")) {
-
-                for (Method method : classLoader.getClass()
-                    .getDeclaredMethods()) {
-                    if (method.getName()
-                        .equals("appendToClassPathForInstrumentation")) {
-                        method.setAccessible(true);
-                        try {
-                            method.invoke(classLoader, jarPath.toString());
-                        } catch (IllegalAccessException | InvocationTargetException e) {
-                            throw new RuntimeException(e);
-                        }
-                        break;
-                    }
-                }
-                manager = new ScriptEngineManager(classLoader);
-            }
-        }
-
-        if (manager == null) manager = new ScriptEngineManager();
-
-        List<ScriptEngineFactory> factories = manager.getEngineFactories();
-        for (ScriptEngineFactory f : factories) {
-            LogHelper.info("Available Engine: " + f.getLanguageName() + " " + f.getEngineName() + " " + f.getNames());
-        }
-
-        engine = manager.getEngineByName("js");
+        engine = ScriptEngineHandler.manager.getEngineByName("js");
 
         if (engine == null) {
             LogHelper.fatal("no javascript engine.");

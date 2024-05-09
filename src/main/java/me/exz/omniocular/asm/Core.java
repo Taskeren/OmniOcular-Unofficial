@@ -5,6 +5,7 @@ import java.util.Map;
 
 import cpw.mods.fml.relauncher.FMLInjectionData;
 import cpw.mods.fml.relauncher.IFMLLoadingPlugin;
+import me.exz.omniocular.handler.ScriptEngineHandler;
 
 @IFMLLoadingPlugin.MCVersion("1.7.10")
 public class Core implements IFMLLoadingPlugin {
@@ -13,7 +14,7 @@ public class Core implements IFMLLoadingPlugin {
 
     public Core() {
         if (minecraftDir != null) return; // get called twice, once for IFMLCallHook
-
+        ScriptEngineHandler.initScriptEngineManager();
         minecraftDir = (File) FMLInjectionData.data()[6];
     }
 
