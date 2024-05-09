@@ -14,8 +14,8 @@ public class Core implements IFMLLoadingPlugin {
 
     public Core() {
         if (minecraftDir != null) return; // get called twice, once for IFMLCallHook
-        ScriptEngineHandler.initScriptEngineManager();
         minecraftDir = (File) FMLInjectionData.data()[6];
+        ScriptEngineHandler.initScriptEngineManager();
     }
 
     @Override
