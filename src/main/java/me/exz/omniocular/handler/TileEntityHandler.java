@@ -55,6 +55,7 @@ public class TileEntityHandler implements IWailaDataProvider {
     @Override
     public List<String> getWailaBody(ItemStack itemStack, List<String> currenttip, IWailaDataAccessor accessor,
         IWailaConfigHandler config) {
+        if (!ConfigHandler.enableTileEntityInfo) return currenttip;
         NBTTagCompound n = accessor.getNBTData();
         if (n != null) {
             int hashCode = n.toString()

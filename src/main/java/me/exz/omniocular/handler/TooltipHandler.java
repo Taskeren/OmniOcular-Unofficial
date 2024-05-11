@@ -26,6 +26,7 @@ public class TooltipHandler implements IContainerTooltipHandler {
     @Override
     public List<String> handleItemTooltip(GuiContainer guiContainer, ItemStack itemStack, int i, int i2,
         List<String> currenttip) {
+        if (!ConfigHandler.enableTooltipInfo) return currenttip;
         if (guiContainer != null && GuiContainerManager.shouldShowTooltip(guiContainer) && itemStack != null) {
             NBTTagCompound n = itemStack.getTagCompound();
 

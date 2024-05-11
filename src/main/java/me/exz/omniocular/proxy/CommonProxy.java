@@ -27,10 +27,9 @@ public abstract class CommonProxy implements IProxy {
 
     @Override
     public void registerWaila() {
-        if (ConfigHandler.enableEntityInfo) FMLInterModComms
-            .sendMessage("Waila", "register", "me.exz.omniocular.handler.EntityHandler.callbackRegister");
+        FMLInterModComms.sendMessage("Waila", "register", "me.exz.omniocular.handler.EntityHandler.callbackRegister");
 
-        if (ConfigHandler.enableTileEntityInfo) FMLInterModComms
+        FMLInterModComms
             .sendMessage("Waila", "register", "me.exz.omniocular.handler.TileEntityHandler.callbackRegister");
     }
 
