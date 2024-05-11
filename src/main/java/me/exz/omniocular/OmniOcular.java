@@ -18,6 +18,7 @@ import me.exz.omniocular.reference.Reference;
     modid = Reference.MOD_ID,
     name = Reference.MOD_NAME,
     version = Reference.VERSION,
+    guiFactory = "me.exz.omniocular.client.gui.GuiFactory",
     dependencies = "required-after:Waila;required-after:NotEnoughItems")
 
 public class OmniOcular {

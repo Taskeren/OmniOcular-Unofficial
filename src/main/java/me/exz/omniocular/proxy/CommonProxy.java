@@ -27,8 +27,10 @@ public abstract class CommonProxy implements IProxy {
 
     @Override
     public void registerWaila() {
-        FMLInterModComms.sendMessage("Waila", "register", "me.exz.omniocular.handler.EntityHandler.callbackRegister");
-        FMLInterModComms
+        if (ConfigHandler.enableEntityInfo) FMLInterModComms
+            .sendMessage("Waila", "register", "me.exz.omniocular.handler.EntityHandler.callbackRegister");
+
+        if (ConfigHandler.enableTileEntityInfo) FMLInterModComms
             .sendMessage("Waila", "register", "me.exz.omniocular.handler.TileEntityHandler.callbackRegister");
     }
 
@@ -40,8 +42,7 @@ public abstract class CommonProxy implements IProxy {
 
     @Override
     public void initConfig(FMLPreInitializationEvent event) {
-        ConfigHandler.minecraftConfigDirectory = event.getModConfigurationDirectory();
-        ConfigHandler.initConfigFiles();
+        ConfigHandler.initConfigFiles(event);
         // JSHandler.initEngine();
     }
 }

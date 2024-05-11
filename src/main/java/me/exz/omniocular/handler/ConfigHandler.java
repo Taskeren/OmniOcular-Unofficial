@@ -24,6 +24,8 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
+import net.minecraftforge.common.config.Configuration;
+
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.w3c.dom.Document;
@@ -33,13 +35,22 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
+import cpw.mods.fml.client.event.ConfigChangedEvent;
 import cpw.mods.fml.common.Loader;
+import cpw.mods.fml.common.event.FMLPreInitializationEvent;
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import me.exz.omniocular.OmniOcular;
 import me.exz.omniocular.reference.Reference;
 import me.exz.omniocular.util.LogHelper;
 
 @SuppressWarnings("CanBeFinal")
 public class ConfigHandler {
+
+    public static Configuration config;
+    public static boolean enableEntityInfo = true;
+    public static boolean enableFMPInfo = true;
+    public static boolean enableTileEntityInfo = true;
+    public static boolean enableTooltipInfo = true;
 
     public static File minecraftConfigDirectory;
     public static String mergedConfig = "";
@@ -49,7 +60,45 @@ public class ConfigHandler {
     static Map<String, String> settingList = new HashMap<>();
     private static File configDir;
 
-    public static void initConfigFiles() {
+    @SubscribeEvent
+    public void onConfigChangedEvent(ConfigChangedEvent.OnConfigChangedEvent event) {
+        if (event.modID.equalsIgnoreCase(Reference.MOD_ID)) {
+            loadConfig();
+        }
+    }
+
+    private static void loadConfig() {
+
+        enableEntityInfo = config.getBoolean(
+            "enableEntityInfo",
+            Configuration.CATEGORY_GENERAL,
+            enableEntityInfo,
+            "Handle entity information.");
+        enableFMPInfo = config
+            .getBoolean("enableFMPInfo", Configuration.CATEGORY_GENERAL, enableFMPInfo, "Handle FMP information.");
+        enableTileEntityInfo = config.getBoolean(
+            "enableTileEntityInfo",
+            Configuration.CATEGORY_GENERAL,
+            enableTileEntityInfo,
+            "Handle TileEntity information.");
+        enableTooltipInfo = config.getBoolean(
+            "enableTooltipInfo",
+            Configuration.CATEGORY_GENERAL,
+            enableTooltipInfo,
+            "Handle Tooltip information.");
+
+        if (config.hasChanged()) {
+            config.save();
+        }
+    }
+
+    public static void initConfigFiles(FMLPreInitializationEvent event) {
+
+        minecraftConfigDirectory = event.getModConfigurationDirectory();
+
+        config = new Configuration(event.getSuggestedConfigurationFile());
+        loadConfig();
+
         configDir = new File(minecraftConfigDirectory, Reference.MOD_ID);
         if (!configDir.exists()) {
             if (!configDir.mkdir()) {

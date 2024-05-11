@@ -72,7 +72,7 @@ public class ScriptEngineHandler {
                 succeed = false;
             }
 
-            if (succeed) {
+            if (!succeed) {
                 File jarFile = new File(Core.minecraftDir, "/mods/oo/nashorn-core-15.4.jar");
                 LogHelper.info("Nashorn core path: " + jarFile);
                 if (!jarFile.exists() || !jarFile.isFile()) {
@@ -124,8 +124,8 @@ public class ScriptEngineHandler {
                         }
                     }
                 }
-                manager = new ScriptEngineManager(classLoader);
             }
+            manager = new ScriptEngineManager(classLoader);
         } else {
             try {
                 LaunchClassLoader launchClassLoader = Launch.classLoader;

@@ -18,7 +18,7 @@ public class ClientProxy extends CommonProxy {
 
     @Override
     public void registerNEI() {
-        GuiContainerManager.addTooltipHandler(new TooltipHandler());
+        if (ConfigHandler.enableTooltipInfo) GuiContainerManager.addTooltipHandler(new TooltipHandler());
     }
 
     @Override
