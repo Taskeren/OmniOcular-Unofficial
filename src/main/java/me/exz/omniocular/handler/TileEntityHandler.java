@@ -1,9 +1,11 @@
 package me.exz.omniocular.handler;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -51,24 +53,29 @@ public class TileEntityHandler implements IWailaDataProvider {
 
     private int lastItemStackHash;
     private List<String> lastTps;
+    private long lastTick;
+    private static final List<String> EMPTY_LIST = new ArrayList<>();
 
     @Override
     public List<String> getWailaBody(ItemStack itemStack, List<String> currenttip, IWailaDataAccessor accessor,
         IWailaConfigHandler config) {
         if (!ConfigHandler.enableTileEntityInfo) return currenttip;
-        NBTTagCompound n = accessor.getNBTData();
-        if (n != null) {
-            int hashCode = n.toString()
-                .hashCode();
-            if (hashCode != lastItemStackHash || (accessor.getWorld()
-                .getTotalWorldTime() & ((1 << 5) - 1)) == 1) {
-                lastItemStackHash = hashCode;
 
-                lastTps = JSHandler
-                    .getBody(ConfigHandler.tileEntityPattern, n, n.getString("id"), accessor.getPlayer());
-            }
-            currenttip.addAll(lastTps);
+        Item item = itemStack.getItem();
+        int hashCode = item == null ? 0 : item.hashCode();
+        long currentTick = accessor.getWorld()
+            .getTotalWorldTime();
+
+        if (hashCode != lastItemStackHash || lastTick != currentTick) {
+            lastTick = currentTick;
+            lastItemStackHash = hashCode;
+            NBTTagCompound n = accessor.getNBTData();
+            lastTps = n != null
+                ? JSHandler.getBody(ConfigHandler.tileEntityPattern, n, n.getString("id"), accessor.getPlayer())
+                : EMPTY_LIST;
         }
+
+        currenttip.addAll(lastTps);
         return currenttip;
     }
 

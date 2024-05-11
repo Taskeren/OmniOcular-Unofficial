@@ -41,7 +41,10 @@ public class JSHandler {
     static ScriptEngine engine;
     static HashSet<String> scriptSet = new HashSet<>();
 
-    static List<String> EMPTY_LIST = new ArrayList<>();
+    private static class EmptyList extends ArrayList<String> {
+    }
+
+    static List<String> EMPTY_LIST = new EmptyList();
     static LoadingCache<Integer, List<String>> cache = CacheBuilder.newBuilder()
         .maximumSize(200)
         .build(new CacheLoader<>() {
@@ -61,7 +64,7 @@ public class JSHandler {
         int hashCode = n.toString()
             .hashCode();
         List<String> list = cache.getUnchecked(hashCode);
-        if (EMPTY_LIST.equals(list)) {
+        if (list instanceof EmptyList) {
 
             try {
                 String json = "var nbt=" + NBTHelper.NBT2json(n) + ";";

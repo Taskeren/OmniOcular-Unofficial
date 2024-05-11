@@ -24,7 +24,6 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
-import cpw.mods.fml.common.FMLCommonHandler;
 import net.minecraftforge.common.config.Configuration;
 
 import org.apache.commons.io.FileUtils;
@@ -37,6 +36,7 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 import cpw.mods.fml.client.event.ConfigChangedEvent;
+import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
@@ -95,7 +95,9 @@ public class ConfigHandler {
 
     public static void initConfigFiles(FMLPreInitializationEvent event) {
 
-        FMLCommonHandler.instance().bus().register(new ConfigHandler());
+        FMLCommonHandler.instance()
+            .bus()
+            .register(new ConfigHandler());
 
         minecraftConfigDirectory = event.getModConfigurationDirectory();
 

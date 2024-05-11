@@ -1,5 +1,6 @@
 package me.exz.omniocular.handler;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import net.minecraft.entity.Entity;
@@ -35,30 +36,27 @@ public class EntityHandler implements IWailaEntityProvider {
         return currenttip;
     }
 
-    private int lastEntityHash;
+    private int lastEntityId;
     private List<String> lastTps;
+    private static final List<String> EMPTY_LIST = new ArrayList<>();
 
     @Override
     public List<String> getWailaBody(Entity entity, List<String> currenttip, IWailaEntityAccessor accessor,
         IWailaConfigHandler config) {
+        if (!ConfigHandler.enableEntityInfo) return currenttip;
 
-        NBTTagCompound n = accessor.getNBTData();
-        if (n != null) {
-            int hashCode = n.toString()
-                .hashCode();
-            if (hashCode != lastEntityHash || (accessor.getWorld()
-                .getTotalWorldTime() & ((1 << 5) - 1)) == 1) {
-                lastEntityHash = hashCode;
-
-                lastTps = JSHandler.getBody(
-                    ConfigHandler.entityPattern,
-                    n,
-                    EntityList.getEntityString(accessor.getEntity()),
-                    accessor.getPlayer());
-            }
-            lastEntityHash = entity.hashCode();
-            currenttip.addAll(lastTps);
+        int id = entity.getEntityId();
+        if (id != lastEntityId || (entity.worldObj.getTotalWorldTime() % 10 == 0)) {
+            lastEntityId = id;
+            NBTTagCompound n = accessor.getNBTData();
+            lastTps = n != null ? JSHandler.getBody(
+                ConfigHandler.entityPattern,
+                n,
+                EntityList.getEntityString(accessor.getEntity()),
+                accessor.getPlayer()) : EMPTY_LIST;
         }
+
+        currenttip.addAll(lastTps);
         return currenttip;
     }
 
