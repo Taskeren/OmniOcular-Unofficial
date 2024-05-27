@@ -1,4 +1,4 @@
-package me.exz.omniocular.handler;
+package me.exz.omniocular.waila;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,6 +13,8 @@ import mcp.mobius.waila.api.IWailaConfigHandler;
 import mcp.mobius.waila.api.IWailaEntityAccessor;
 import mcp.mobius.waila.api.IWailaEntityProvider;
 import mcp.mobius.waila.api.IWailaRegistrar;
+import me.exz.omniocular.handler.ConfigHandler;
+import me.exz.omniocular.handler.JSHandler;
 
 public class EntityHandler implements IWailaEntityProvider {
 

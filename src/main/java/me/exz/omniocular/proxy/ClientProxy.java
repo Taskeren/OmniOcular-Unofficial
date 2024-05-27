@@ -3,26 +3,20 @@ package me.exz.omniocular.proxy;
 import net.minecraftforge.client.ClientCommandHandler;
 
 import codechicken.nei.guihook.GuiContainerManager;
-import me.exz.omniocular.command.CommandLookFor;
+import cpw.mods.fml.common.event.FMLInitializationEvent;
+import cpw.mods.fml.common.event.FMLPostInitializationEvent;
+import me.exz.omniocular.client.command.CommandLookFor;
 import me.exz.omniocular.handler.ConfigHandler;
-import me.exz.omniocular.handler.TooltipHandler;
 import me.exz.omniocular.util.LogHelper;
+import me.exz.omniocular.waila.TooltipHandler;
 
 @SuppressWarnings("UnusedDeclaration")
 public class ClientProxy extends CommonProxy {
 
     @Override
-    public void registerClientCommand() {
+    public void init(FMLInitializationEvent event) {
+        super.init(event);
         ClientCommandHandler.instance.registerCommand(new CommandLookFor());
-    }
-
-    @Override
-    public void registerNEI() {
-        GuiContainerManager.addTooltipHandler(new TooltipHandler());
-    }
-
-    @Override
-    public void prepareConfigFiles() {
         try {
             ConfigHandler.releasePreConfigFiles();
         } catch (Exception e) {
@@ -30,6 +24,13 @@ public class ClientProxy extends CommonProxy {
             e.printStackTrace();
         }
         ConfigHandler.mergeConfig();
+
+    }
+
+    @Override
+    public void postInit(FMLPostInitializationEvent event) {
+        super.postInit(event);
+        GuiContainerManager.addTooltipHandler(new TooltipHandler());
     }
 
 }

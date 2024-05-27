@@ -1,10 +1,12 @@
-package me.exz.omniocular.handler;
+package me.exz.omniocular.waila;
 
 import java.util.List;
 
 import net.minecraft.nbt.NBTTagCompound;
 
 import mcp.mobius.waila.api.IWailaFMPAccessor;
+import me.exz.omniocular.handler.ConfigHandler;
+import me.exz.omniocular.handler.JSHandler;
 
 public class FMPHandler {
 

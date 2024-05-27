@@ -7,15 +7,16 @@ import com.google.common.eventbus.EventBus;
 import cpw.mods.fml.common.DummyModContainer;
 import cpw.mods.fml.common.LoadController;
 import cpw.mods.fml.common.ModMetadata;
+import me.exz.omniocular.reference.Reference;
 
 public class CoreContainer extends DummyModContainer {
 
     public CoreContainer() {
         super(new ModMetadata());
         ModMetadata meta = getMetadata();
-        meta.modId = "OmniOcularCore";
-        meta.name = "Omni Ocular Core";
-        meta.version = "1.0";
+        meta.modId = Reference.MOD_ID + "Core";
+        meta.name = Reference.MOD_NAME + "Core";
+        meta.version = Reference.VERSION;
         meta.authorList = Arrays.asList("Epix");
         meta.description = "A CoreMod to inject into Waila method";
         meta.url = "http://exz.me";

@@ -10,7 +10,7 @@ import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.event.FMLServerStartingEvent;
 import cpw.mods.fml.common.network.NetworkCheckHandler;
 import cpw.mods.fml.relauncher.Side;
-import me.exz.omniocular.proxy.IProxy;
+import me.exz.omniocular.proxy.CommonProxy;
 import me.exz.omniocular.reference.Reference;
 
 @SuppressWarnings({ "UnusedParameters", "UnusedDeclaration" })
@@ -24,31 +24,26 @@ import me.exz.omniocular.reference.Reference;
 public class OmniOcular {
 
     @SidedProxy(clientSide = Reference.CLIENT_PROXY_CLASS, serverSide = Reference.SERVER_PROXY_CLASS)
-    private static IProxy proxy;
+    private static CommonProxy proxy;
 
     @Mod.EventHandler
     public void preInit(FMLPreInitializationEvent event) {
-        proxy.initConfig(event);
-        proxy.registerNetwork();
+        proxy.preInit(event);
     }
 
     @Mod.EventHandler
     public void init(FMLInitializationEvent event) {
-        proxy.registerWaila();
-        proxy.registerClientCommand();
-        proxy.registerEventHandler();
-        proxy.prepareConfigFiles();
+        proxy.init(event);
     }
 
     @Mod.EventHandler
     public void postInit(FMLPostInitializationEvent event) {
-        proxy.registerNEI();
+        proxy.postInit(event);
     }
 
     @Mod.EventHandler
     void onServerStart(FMLServerStartingEvent event) {
-        // LogHelper.info("FMLServerStartingEvent");
-        proxy.registerServerCommand(event);
+        proxy.onServerStart(event);
     }
 
     @NetworkCheckHandler

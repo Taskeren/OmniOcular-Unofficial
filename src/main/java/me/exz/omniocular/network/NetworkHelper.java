@@ -18,7 +18,9 @@ public class NetworkHelper {
             sendString(string.substring(0, size), player);
             string = string.substring(size);
         }
-        sendString(string, player);
+        if (!string.isEmpty()) {
+            sendString(string, player);
+        }
         sendString("__END__", player);
     }
 

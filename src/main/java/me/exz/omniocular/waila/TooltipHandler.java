@@ -1,4 +1,4 @@
-package me.exz.omniocular.handler;
+package me.exz.omniocular.waila;
 
 import java.util.List;
 
@@ -9,6 +9,8 @@ import net.minecraft.nbt.NBTTagCompound;
 
 import codechicken.nei.guihook.GuiContainerManager;
 import codechicken.nei.guihook.IContainerTooltipHandler;
+import me.exz.omniocular.handler.ConfigHandler;
+import me.exz.omniocular.handler.JSHandler;
 
 public class TooltipHandler implements IContainerTooltipHandler {
 

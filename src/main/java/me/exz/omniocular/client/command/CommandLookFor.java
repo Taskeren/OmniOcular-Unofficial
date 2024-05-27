@@ -1,4 +1,4 @@
-package me.exz.omniocular.command;
+package me.exz.omniocular.client.command;
 
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
