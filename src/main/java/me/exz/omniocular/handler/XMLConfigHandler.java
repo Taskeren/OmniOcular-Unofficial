@@ -43,8 +43,8 @@ import me.exz.omniocular.waila.JSHandler;
 @SuppressWarnings("CanBeFinal")
 public class XMLConfigHandler {
 
-    private static File minecraftConfigDirectory;
     public static String mergedConfig = "";
+    public static StringBuilder stringBuilder;
     public static Map<Pattern, Node> entityPattern = new HashMap<>();
     public static Map<Pattern, Node> tileEntityPattern = new HashMap<>();
     public static Map<Pattern, Node> tooltipPattern = new HashMap<>();
@@ -52,9 +52,8 @@ public class XMLConfigHandler {
     private static File configDir;
 
     public static void initConfigFiles(FMLPreInitializationEvent event) {
-        minecraftConfigDirectory = event.getModConfigurationDirectory();
 
-        configDir = new File(minecraftConfigDirectory, Reference.MOD_ID);
+        configDir = new File(event.getModConfigurationDirectory(), Reference.OLD_MOD_ID);
         if (!configDir.exists()) {
             if (!configDir.mkdir()) {
                 LogHelper.fatal("Can't create config folder");
@@ -159,7 +158,6 @@ public class XMLConfigHandler {
     }
 
     public static void parseConfigFiles() {
-        // System.out.println(mergedConfig);
 
         JSHandler.initEngine();
         entityPattern.clear();

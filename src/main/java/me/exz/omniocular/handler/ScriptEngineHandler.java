@@ -66,7 +66,7 @@ public class ScriptEngineHandler {
             boolean succeed;
 
             try {
-                Class<?> clazz = classLoader.loadClass("org.openjdk.nashorn.api.scripting.NashornScriptEngineFactory");
+                classLoader.loadClass("org.openjdk.nashorn.api.scripting.NashornScriptEngineFactory");
                 succeed = true;
             } catch (ClassNotFoundException e) {
                 succeed = false;

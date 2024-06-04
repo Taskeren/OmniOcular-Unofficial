@@ -1,12 +1,13 @@
 package me.exz.omniocular.config;
 
+import java.io.File;
+
 import net.minecraftforge.common.config.Configuration;
 
 import cpw.mods.fml.client.event.ConfigChangedEvent;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import me.exz.omniocular.handler.XMLConfigHandler;
 import me.exz.omniocular.reference.Reference;
 
 public class Config {
@@ -16,6 +17,7 @@ public class Config {
     public static boolean enableFMPInfo = true;
     public static boolean enableTileEntityInfo = true;
     public static boolean enableTooltipInfo = true;
+    public static boolean sendToClientXML = true;
 
     @SubscribeEvent
     public void onConfigChangedEvent(ConfigChangedEvent.OnConfigChangedEvent event) {
@@ -28,9 +30,9 @@ public class Config {
 
         FMLCommonHandler.instance()
             .bus()
-            .register(new XMLConfigHandler());
+            .register(new Config());
 
-        config = new Configuration(event.getSuggestedConfigurationFile());
+        config = new Configuration(new File(event.getModConfigurationDirectory(), Reference.OLD_MOD_ID + ".cfg"));
         loadConfig();
     }
 
@@ -53,6 +55,11 @@ public class Config {
             Configuration.CATEGORY_GENERAL,
             enableTooltipInfo,
             "Handle Tooltip information.");
+        sendToClientXML = config.getBoolean(
+            "sendToClientXML",
+            Configuration.CATEGORY_GENERAL,
+            sendToClientXML,
+            "Use the server-side XML configuration");
 
         if (config.hasChanged()) {
             config.save();

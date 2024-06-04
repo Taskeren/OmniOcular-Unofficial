@@ -41,12 +41,14 @@ public class XMLConfigMessageHandler implements IMessageHandler<XMLConfigMessage
 
     private static void recvConfigString(String string) {
         switch (string) {
-            case "__START__" -> XMLConfigHandler.mergedConfig = "";
+            case "__START__" -> XMLConfigHandler.stringBuilder = new StringBuilder();
             case "__END__" -> {
+                XMLConfigHandler.mergedConfig = XMLConfigHandler.stringBuilder.toString();
+                XMLConfigHandler.stringBuilder = null;
                 LogHelper.info("received config: " + XMLConfigHandler.mergedConfig);
                 XMLConfigHandler.parseConfigFiles();
             }
-            default -> XMLConfigHandler.mergedConfig += string;
+            default -> XMLConfigHandler.stringBuilder.append(string);
         }
     }
 }
