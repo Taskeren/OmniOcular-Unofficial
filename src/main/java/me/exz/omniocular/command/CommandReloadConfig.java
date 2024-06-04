@@ -8,7 +8,7 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
 
 import me.exz.omniocular.handler.XMLConfigHandler;
-import me.exz.omniocular.network.ConfigMessageHandler;
+import me.exz.omniocular.network.XMLConfigMessageHandler;
 import me.exz.omniocular.util.LogHelper;
 
 public class CommandReloadConfig extends CommandBase {
@@ -42,7 +42,7 @@ public class CommandReloadConfig extends CommandBase {
         for (EntityPlayerMP player : playerList) {
             // ConfigMessageHandler.network.sendTo(new ConfigMessage(ConfigHandler.mergedConfig), (EntityPlayerMP)
             // player);
-            ConfigMessageHandler.sendConfigString(XMLConfigHandler.mergedConfig, player);
+            XMLConfigMessageHandler.sendConfigString(XMLConfigHandler.mergedConfig, player);
         }
         LogHelper.info(sender.getCommandSenderName() + " commit a config reload.");
     }

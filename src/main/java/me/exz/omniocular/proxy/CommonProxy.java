@@ -9,10 +9,10 @@ import cpw.mods.fml.common.event.FMLServerStartingEvent;
 import cpw.mods.fml.relauncher.Side;
 import me.exz.omniocular.command.CommandReloadConfig;
 import me.exz.omniocular.config.Config;
-import me.exz.omniocular.handler.ConfigEventHandler;
+import me.exz.omniocular.handler.XMLConfigEventHandler;
 import me.exz.omniocular.handler.XMLConfigHandler;
-import me.exz.omniocular.network.ConfigMessage;
-import me.exz.omniocular.network.ConfigMessageHandler;
+import me.exz.omniocular.network.XMLConfigMessage;
+import me.exz.omniocular.network.XMLConfigMessageHandler;
 
 public class CommonProxy {
 
@@ -21,7 +21,8 @@ public class CommonProxy {
         XMLConfigHandler.initConfigFiles(event);
 
         // JSHandler.initEngine();
-        ConfigMessageHandler.network.registerMessage(ConfigMessageHandler.class, ConfigMessage.class, 0, Side.CLIENT);
+        XMLConfigMessageHandler.network
+            .registerMessage(XMLConfigMessageHandler.class, XMLConfigMessage.class, 0, Side.CLIENT);
     }
 
     public void init(FMLInitializationEvent event) {
@@ -30,7 +31,7 @@ public class CommonProxy {
         FMLInterModComms.sendMessage("Waila", "register", "me.exz.omniocular.waila.TileEntityHandler.callbackRegister");
         FMLCommonHandler.instance()
             .bus()
-            .register(new ConfigEventHandler());
+            .register(new XMLConfigEventHandler());
 
     }
 

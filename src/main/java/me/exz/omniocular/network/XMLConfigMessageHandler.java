@@ -11,19 +11,19 @@ import me.exz.omniocular.handler.XMLConfigHandler;
 import me.exz.omniocular.reference.Reference;
 import me.exz.omniocular.util.LogHelper;
 
-public class ConfigMessageHandler implements IMessageHandler<ConfigMessage, IMessage> {
+public class XMLConfigMessageHandler implements IMessageHandler<XMLConfigMessage, IMessage> {
 
     public static final SimpleNetworkWrapper network = NetworkRegistry.INSTANCE.newSimpleChannel(Reference.MOD_ID);
 
     @Override
-    public IMessage onMessage(ConfigMessage message, MessageContext ctx) {
+    public IMessage onMessage(XMLConfigMessage message, MessageContext ctx) {
         // LogHelper.info("Config Received: "+ message.text);
         recvConfigString(message.text);
         return null;
     }
 
     private static void sendString(String string, EntityPlayerMP player) {
-        ConfigMessageHandler.network.sendTo(new ConfigMessage(string), player);
+        XMLConfigMessageHandler.network.sendTo(new XMLConfigMessage(string), player);
     }
 
     public static void sendConfigString(String string, EntityPlayerMP player) {

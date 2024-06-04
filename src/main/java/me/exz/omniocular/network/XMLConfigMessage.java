@@ -4,14 +4,14 @@ import cpw.mods.fml.common.network.ByteBufUtils;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import io.netty.buffer.ByteBuf;
 
-public class ConfigMessage implements IMessage {
+public class XMLConfigMessage implements IMessage {
 
     String text;
 
     @SuppressWarnings("UnusedDeclaration")
-    public ConfigMessage() {}
+    public XMLConfigMessage() {}
 
-    ConfigMessage(String text) {
+    XMLConfigMessage(String text) {
         this.text = text;
     }
 
