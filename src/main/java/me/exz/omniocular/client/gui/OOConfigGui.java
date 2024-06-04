@@ -5,7 +5,7 @@ import net.minecraftforge.common.config.ConfigElement;
 import net.minecraftforge.common.config.Configuration;
 
 import cpw.mods.fml.client.config.GuiConfig;
-import me.exz.omniocular.handler.ConfigHandler;
+import me.exz.omniocular.config.Config;
 import me.exz.omniocular.reference.Reference;
 
 public class OOConfigGui extends GuiConfig {
@@ -14,10 +14,10 @@ public class OOConfigGui extends GuiConfig {
     public OOConfigGui(GuiScreen guiScreen) {
         super(
             guiScreen,
-            new ConfigElement(ConfigHandler.config.getCategory(Configuration.CATEGORY_GENERAL)).getChildElements(),
+            new ConfigElement(Config.config.getCategory(Configuration.CATEGORY_GENERAL)).getChildElements(),
             Reference.MOD_ID,
             false,
             false,
-            GuiConfig.getAbridgedConfigPath(ConfigHandler.config.toString()));
+            GuiConfig.getAbridgedConfigPath(Config.config.toString()));
     }
 }

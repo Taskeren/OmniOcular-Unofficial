@@ -1,4 +1,4 @@
-package me.exz.omniocular.handler;
+package me.exz.omniocular.waila;
 
 import static me.exz.omniocular.util.NBTHelper.NBTCache;
 
@@ -32,14 +32,16 @@ import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 
+import me.exz.omniocular.handler.ScriptEngineHandler;
+import me.exz.omniocular.handler.XMLConfigHandler;
 import me.exz.omniocular.util.LogHelper;
 import me.exz.omniocular.util.NBTHelper;
 
 @SuppressWarnings({ "CanBeFinal", "UnusedDeclaration" })
 public class JSHandler {
 
-    static ScriptEngine engine;
-    static HashSet<String> scriptSet = new HashSet<>();
+    public static ScriptEngine engine;
+    public static HashSet<String> scriptSet = new HashSet<>();
 
     private static class EmptyList extends ArrayList<String> {
     }
@@ -126,10 +128,10 @@ public class JSHandler {
                                     || result.equals("NaN")) {
                                     continue;
                                 }
-                                if (patternMap == ConfigHandler.tooltipPattern) {
+                                if (patternMap == XMLConfigHandler.tooltipPattern) {
                                     tip = "§7" + displayname + ": §f";
                                 } else {
-                                    tip = ConfigHandler.settingList.get("displaynameTileentity")
+                                    tip = XMLConfigHandler.settingList.get("displaynameTileentity")
                                         .replace("DISPLAYNAME", displayname)
                                         .replace("RETURN", result);
                                 }
@@ -149,7 +151,8 @@ public class JSHandler {
         } else return list;
     }
 
-    static void initEngine() {
+    public static void initEngine() {
+        scriptSet.clear();
 
         engine = ScriptEngineHandler.manager.getEngineByName("js");
 
@@ -164,7 +167,7 @@ public class JSHandler {
             engine.eval("load(\"nashorn:mozilla_compat.js\");");
         } catch (ScriptException ignored) {}
         try {
-            engine.eval("var _JSHandler = Java.type('me.exz.omniocular.handler.JSHandler');");
+            engine.eval("var _JSHandler = Java.type('me.exz.omniocular.waila.JSHandler');");
             engine.eval("function translate(t){return _JSHandler.translate(t)}");
             engine.eval("function translateFormatted(t,obj){return _JSHanlder.translateFormatted(t,obj)}");
             engine.eval("function name(n){return _JSHandler.getDisplayName(n.hashCode)}");

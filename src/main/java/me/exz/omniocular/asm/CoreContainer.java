@@ -15,7 +15,7 @@ public class CoreContainer extends DummyModContainer {
         super(new ModMetadata());
         ModMetadata meta = getMetadata();
         meta.modId = Reference.MOD_ID + "Core";
-        meta.name = Reference.MOD_NAME + "Core";
+        meta.name = Reference.MOD_NAME + " Core";
         meta.version = Reference.VERSION;
         meta.authorList = Arrays.asList("Epix");
         meta.description = "A CoreMod to inject into Waila method";

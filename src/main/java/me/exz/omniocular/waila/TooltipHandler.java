@@ -9,8 +9,8 @@ import net.minecraft.nbt.NBTTagCompound;
 
 import codechicken.nei.guihook.GuiContainerManager;
 import codechicken.nei.guihook.IContainerTooltipHandler;
-import me.exz.omniocular.handler.ConfigHandler;
-import me.exz.omniocular.handler.JSHandler;
+import me.exz.omniocular.config.Config;
+import me.exz.omniocular.handler.XMLConfigHandler;
 
 public class TooltipHandler implements IContainerTooltipHandler {
 
@@ -28,7 +28,8 @@ public class TooltipHandler implements IContainerTooltipHandler {
     @Override
     public List<String> handleItemTooltip(GuiContainer guiContainer, ItemStack itemStack, int i, int i2,
         List<String> currenttip) {
-        if (!ConfigHandler.enableTooltipInfo) return currenttip;
+        if (!Config.enableTooltipInfo) return currenttip;
+
         if (guiContainer != null && GuiContainerManager.shouldShowTooltip(guiContainer) && itemStack != null) {
             NBTTagCompound n = itemStack.getTagCompound();
 
@@ -37,7 +38,7 @@ public class TooltipHandler implements IContainerTooltipHandler {
                 currenttip.addAll(
                     1,
                     JSHandler.getBody(
-                        ConfigHandler.tooltipPattern,
+                        XMLConfigHandler.tooltipPattern,
                         n,
                         Item.itemRegistry.getNameForObject(itemStack.getItem()),
                         guiContainer.mc.thePlayer));

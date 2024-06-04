@@ -6,7 +6,6 @@ import net.minecraft.command.CommandBase;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.Item;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ChatComponentText;
@@ -55,7 +54,8 @@ public class CommandLookFor extends CommandBase {
                     new ChatComponentTranslation(
                         "Name: %s (%s)",
                         block.getLocalizedName(),
-                        Item.itemRegistry.getNameForObject(block)));
+                        block.getClass()
+                            .getName()));
 
                 TileEntity tileEntity = player.getEntityWorld()
                     .getTileEntity(objectMouseOver.blockX, objectMouseOver.blockY, objectMouseOver.blockZ);
@@ -63,7 +63,16 @@ public class CommandLookFor extends CommandBase {
                     NBTTagCompound nbtTagCompound = new NBTTagCompound();
                     tileEntity.writeToNBT(nbtTagCompound);
                     player.addChatComponentMessage(
-                        new ChatComponentTranslation("NBT: %s", NBTHelper.NBT2json(nbtTagCompound)));
+                        new ChatComponentTranslation(
+                            "TE: %s",
+                            tileEntity.getClass()
+                                .getName()));
+                    String[] lines = NBTHelper.NBT2jsonPrettyPrinting(nbtTagCompound)
+                        .split("\n");
+                    player.addChatComponentMessage(new ChatComponentText("NBT:"));
+                    for (String line : lines) {
+                        player.addChatComponentMessage(new ChatComponentText(line));
+                    }
 
                 }
                 break;

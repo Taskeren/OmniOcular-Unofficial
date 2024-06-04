@@ -2,7 +2,7 @@ package me.exz.omniocular.network;
 
 import net.minecraft.entity.player.EntityPlayerMP;
 
-import me.exz.omniocular.handler.ConfigHandler;
+import me.exz.omniocular.handler.XMLConfigHandler;
 import me.exz.omniocular.util.LogHelper;
 
 public class NetworkHelper {
@@ -26,12 +26,12 @@ public class NetworkHelper {
 
     static void recvConfigString(String string) {
         switch (string) {
-            case "__START__" -> ConfigHandler.mergedConfig = "";
+            case "__START__" -> XMLConfigHandler.mergedConfig = "";
             case "__END__" -> {
-                LogHelper.info("received config: " + ConfigHandler.mergedConfig);
-                ConfigHandler.parseConfigFiles();
+                LogHelper.info("received config: " + XMLConfigHandler.mergedConfig);
+                XMLConfigHandler.parseConfigFiles();
             }
-            default -> ConfigHandler.mergedConfig += string;
+            default -> XMLConfigHandler.mergedConfig += string;
         }
     }
 }

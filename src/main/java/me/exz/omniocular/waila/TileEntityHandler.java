@@ -15,8 +15,8 @@ import mcp.mobius.waila.api.IWailaConfigHandler;
 import mcp.mobius.waila.api.IWailaDataAccessor;
 import mcp.mobius.waila.api.IWailaDataProvider;
 import mcp.mobius.waila.api.IWailaRegistrar;
-import me.exz.omniocular.handler.ConfigHandler;
-import me.exz.omniocular.handler.JSHandler;
+import me.exz.omniocular.config.Config;
+import me.exz.omniocular.handler.XMLConfigHandler;
 
 public class TileEntityHandler implements IWailaDataProvider {
 
@@ -61,19 +61,19 @@ public class TileEntityHandler implements IWailaDataProvider {
     @Override
     public List<String> getWailaBody(ItemStack itemStack, List<String> currenttip, IWailaDataAccessor accessor,
         IWailaConfigHandler config) {
-        if (!ConfigHandler.enableTileEntityInfo) return currenttip;
+        if (!Config.enableTileEntityInfo) return currenttip;
 
         Item item = itemStack.getItem();
         int hashCode = item == null ? 0 : item.hashCode();
         long currentTick = accessor.getWorld()
             .getTotalWorldTime();
 
-        if (hashCode != lastItemStackHash || lastTick != currentTick) {
+        if (hashCode != lastItemStackHash || currentTick - lastTick > 20) {
             lastTick = currentTick;
             lastItemStackHash = hashCode;
             NBTTagCompound n = accessor.getNBTData();
             lastTps = n != null
-                ? JSHandler.getBody(ConfigHandler.tileEntityPattern, n, n.getString("id"), accessor.getPlayer())
+                ? JSHandler.getBody(XMLConfigHandler.tileEntityPattern, n, n.getString("id"), accessor.getPlayer())
                 : EMPTY_LIST;
         }
 

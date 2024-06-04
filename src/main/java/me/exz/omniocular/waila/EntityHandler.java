@@ -13,8 +13,8 @@ import mcp.mobius.waila.api.IWailaConfigHandler;
 import mcp.mobius.waila.api.IWailaEntityAccessor;
 import mcp.mobius.waila.api.IWailaEntityProvider;
 import mcp.mobius.waila.api.IWailaRegistrar;
-import me.exz.omniocular.handler.ConfigHandler;
-import me.exz.omniocular.handler.JSHandler;
+import me.exz.omniocular.config.Config;
+import me.exz.omniocular.handler.XMLConfigHandler;
 
 public class EntityHandler implements IWailaEntityProvider {
 
@@ -45,14 +45,14 @@ public class EntityHandler implements IWailaEntityProvider {
     @Override
     public List<String> getWailaBody(Entity entity, List<String> currenttip, IWailaEntityAccessor accessor,
         IWailaConfigHandler config) {
-        if (!ConfigHandler.enableEntityInfo) return currenttip;
+        if (!Config.enableEntityInfo) return currenttip;
 
         int id = entity.getEntityId();
         if (id != lastEntityId || (entity.worldObj.getTotalWorldTime() % 10 == 0)) {
             lastEntityId = id;
             NBTTagCompound n = accessor.getNBTData();
             lastTps = n != null ? JSHandler.getBody(
-                ConfigHandler.entityPattern,
+                XMLConfigHandler.entityPattern,
                 n,
                 EntityList.getEntityString(accessor.getEntity()),
                 accessor.getPlayer()) : EMPTY_LIST;

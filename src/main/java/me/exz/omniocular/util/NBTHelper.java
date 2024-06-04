@@ -24,12 +24,25 @@ public class NBTHelper {
                 return new NBTTagCompound();
             }
         });
-    static Gson gson = new GsonBuilder().registerTypeHierarchyAdapter(NBTBase.class, new NBTSerializer())
+    static Gson gson1 = new GsonBuilder().registerTypeHierarchyAdapter(NBTBase.class, new NBTSerializer())
+        .create();
+
+    private static final Gson gson2 = new GsonBuilder().setPrettyPrinting()
+        .registerTypeHierarchyAdapter(NBTBase.class, new NBTSerializer())
         .create();
 
     public static String NBT2json(NBTBase n) {
         try {
-            return gson.toJson(n);
+            return gson1.toJson(n);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return "__ERROR__";
+    }
+
+    public static String NBT2jsonPrettyPrinting(NBTBase n) {
+        try {
+            return gson2.toJson(n);
         } catch (Exception e) {
             e.printStackTrace();
         }

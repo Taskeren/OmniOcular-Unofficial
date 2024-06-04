@@ -1,7 +1,6 @@
 package me.exz.omniocular.util;
 
 import static me.exz.omniocular.util.NBTHelper.NBTCache;
-import static me.exz.omniocular.util.NBTHelper.gson;
 
 import java.lang.reflect.Type;
 import java.util.Map;
@@ -66,7 +65,7 @@ class NBTSerializer implements JsonSerializer<NBTBase> {
             case 9 -> {
                 JsonArray jsonArrayList = new JsonArray();
                 for (Object nbtListItem : ((NBTTagList) src).tagList) {
-                    jsonArrayList.add(gson.toJsonTree(nbtListItem));
+                    jsonArrayList.add(NBTHelper.gson1.toJsonTree(nbtListItem));
                 }
                 return jsonArrayList;
             }
@@ -79,7 +78,7 @@ class NBTSerializer implements JsonSerializer<NBTBase> {
                 // noinspection unchecked
                 Map<String, NBTBase> tagMap = nbtTagCompound.tagMap;
                 for (Map.Entry<String, NBTBase> entry : tagMap.entrySet()) {
-                    jsonObject.add(entry.getKey(), gson.toJsonTree(entry.getValue()));
+                    jsonObject.add(entry.getKey(), NBTHelper.gson1.toJsonTree(entry.getValue()));
                 }
                 return jsonObject;
             }

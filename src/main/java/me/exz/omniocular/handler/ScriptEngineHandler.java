@@ -23,7 +23,7 @@ import me.exz.omniocular.util.LogHelper;
 
 public class ScriptEngineHandler {
 
-    static ScriptEngineManager manager;
+    public static ScriptEngineManager manager;
 
     private static void downLoadFromUrl(String urlStr, File saveFile) throws IOException {
         URL url = new URL(urlStr);

@@ -6,7 +6,7 @@ import codechicken.nei.guihook.GuiContainerManager;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import me.exz.omniocular.client.command.CommandLookFor;
-import me.exz.omniocular.handler.ConfigHandler;
+import me.exz.omniocular.handler.XMLConfigHandler;
 import me.exz.omniocular.util.LogHelper;
 import me.exz.omniocular.waila.TooltipHandler;
 
@@ -18,12 +18,12 @@ public class ClientProxy extends CommonProxy {
         super.init(event);
         ClientCommandHandler.instance.registerCommand(new CommandLookFor());
         try {
-            ConfigHandler.releasePreConfigFiles();
+            XMLConfigHandler.releasePreConfigFiles();
         } catch (Exception e) {
             LogHelper.error("Can't release pre-config files");
             e.printStackTrace();
         }
-        ConfigHandler.mergeConfig();
+        XMLConfigHandler.mergeConfig();
 
     }
 
