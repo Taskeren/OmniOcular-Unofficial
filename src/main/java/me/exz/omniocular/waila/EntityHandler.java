@@ -39,6 +39,7 @@ public class EntityHandler implements IWailaEntityProvider {
     }
 
     private int lastEntityId;
+    private long lastTick;
     private List<String> lastTps;
     private static final List<String> EMPTY_LIST = new ArrayList<>();
 
@@ -48,8 +49,11 @@ public class EntityHandler implements IWailaEntityProvider {
         if (!Config.enableEntityInfo) return currenttip;
 
         int id = entity.getEntityId();
-        if (id != lastEntityId || (entity.worldObj.getTotalWorldTime() % 10 == 0)) {
+        long currentTick = accessor.getWorld()
+            .getTotalWorldTime();
+        if (id != lastEntityId || currentTick - lastTick > 10) {
             lastEntityId = id;
+            lastTick = currentTick;
             NBTTagCompound n = accessor.getNBTData();
             lastTps = n != null ? JSHandler.getBody(
                 XMLConfigHandler.entityPattern,

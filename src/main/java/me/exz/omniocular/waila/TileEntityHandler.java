@@ -68,7 +68,7 @@ public class TileEntityHandler implements IWailaDataProvider {
         long currentTick = accessor.getWorld()
             .getTotalWorldTime();
 
-        if (hashCode != lastItemStackHash || currentTick - lastTick > 20) {
+        if (hashCode != lastItemStackHash || currentTick - lastTick > 10) {
             lastTick = currentTick;
             lastItemStackHash = hashCode;
             NBTTagCompound n = accessor.getNBTData();

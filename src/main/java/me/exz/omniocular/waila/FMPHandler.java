@@ -15,7 +15,7 @@ public class FMPHandler {
         if (!Config.enableFMPInfo) return currenttip;
 
         NBTTagCompound n = accessor.getNBTData();
-        // accessor.getTileEntity().writeToNBT(n);
+
         if (n != null) {
             currenttip.addAll(
                 JSHandler.getBody(XMLConfigHandler.tileEntityPattern, n, n.getString("id"), accessor.getPlayer()));

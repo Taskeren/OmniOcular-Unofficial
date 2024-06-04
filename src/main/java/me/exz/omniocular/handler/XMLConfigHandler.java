@@ -120,8 +120,8 @@ public class XMLConfigHandler {
     }
 
     public static void mergeConfig() {
-        mergedConfig = "";
-        File configDir = new File(minecraftConfigDirectory, Reference.MOD_ID);
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("<root>");
         File[] configFiles = configDir.listFiles();
         if (configFiles != null) {
             for (File configFile : configFiles) {
@@ -129,7 +129,7 @@ public class XMLConfigHandler {
                     try {
                         List<String> lines = Files.readAllLines(configFile.toPath(), StandardCharsets.UTF_8);
                         for (String line : lines) {
-                            mergedConfig += line;
+                            stringBuilder.append(line);
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -137,25 +137,25 @@ public class XMLConfigHandler {
                 }
             }
         }
-        mergedConfig = "<root>" + mergedConfig + "</root>";
+        stringBuilder.append("</root>");
 
         final String[][] quoteChars = { { "&", "&amp;" }, { "<", "&lt;" }, { ">", "&gt;" },
             // {"\"", "&quot;"},
             // {"'", "&apos;"}
         };
 
-        StringBuffer quotedBuffer = new StringBuffer();
+        StringBuilder quotedBuilder = new StringBuilder();
         Pattern tagSelectorRegex = Pattern.compile("(?<=<(init|line)[^>]*>).*?(?=</\\1>)");
-        Matcher tagSelectorMatcher = tagSelectorRegex.matcher(mergedConfig);
+        Matcher tagSelectorMatcher = tagSelectorRegex.matcher(stringBuilder.toString());
         while (tagSelectorMatcher.find()) {
             String quotedString = tagSelectorMatcher.group();
             for (String[] quoteCharPair : quoteChars) {
                 quotedString = quotedString.replace(quoteCharPair[0], quoteCharPair[1]);
             }
-            tagSelectorMatcher.appendReplacement(quotedBuffer, quotedString);
+            tagSelectorMatcher.appendReplacement(quotedBuilder, quotedString);
         }
-        tagSelectorMatcher.appendTail(quotedBuffer);
-        mergedConfig = quotedBuffer.toString();
+        tagSelectorMatcher.appendTail(quotedBuilder);
+        mergedConfig = quotedBuilder.toString();
     }
 
     public static void parseConfigFiles() {

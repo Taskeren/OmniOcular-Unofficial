@@ -33,7 +33,6 @@ public class TooltipHandler implements IContainerTooltipHandler {
         if (guiContainer != null && GuiContainerManager.shouldShowTooltip(guiContainer) && itemStack != null) {
             NBTTagCompound n = itemStack.getTagCompound();
 
-            // accessor.getTileEntity().writeToNBT(n);
             if (n != null) {
                 currenttip.addAll(
                     1,
