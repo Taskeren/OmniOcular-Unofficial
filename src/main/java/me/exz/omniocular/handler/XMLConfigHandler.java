@@ -144,7 +144,7 @@ public class XMLConfigHandler {
             // {"'", "&apos;"}
         };
 
-        StringBuilder quotedBuilder = new StringBuilder();
+        StringBuffer quotedBuffer = new StringBuffer();
         Pattern tagSelectorRegex = Pattern.compile("(?<=<(init|line)[^>]*>).*?(?=</\\1>)");
         Matcher tagSelectorMatcher = tagSelectorRegex.matcher(stringBuilder.toString());
         while (tagSelectorMatcher.find()) {
@@ -152,10 +152,10 @@ public class XMLConfigHandler {
             for (String[] quoteCharPair : quoteChars) {
                 quotedString = quotedString.replace(quoteCharPair[0], quoteCharPair[1]);
             }
-            tagSelectorMatcher.appendReplacement(quotedBuilder, quotedString);
+            tagSelectorMatcher.appendReplacement(quotedBuffer, quotedString);
         }
-        tagSelectorMatcher.appendTail(quotedBuilder);
-        mergedConfig = quotedBuilder.toString();
+        tagSelectorMatcher.appendTail(quotedBuffer);
+        mergedConfig = quotedBuffer.toString();
     }
 
     public static void parseConfigFiles() {

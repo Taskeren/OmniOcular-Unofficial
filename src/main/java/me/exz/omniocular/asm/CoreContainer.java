@@ -19,7 +19,7 @@ public class CoreContainer extends DummyModContainer {
         meta.version = Reference.VERSION;
         meta.authorList = Arrays.asList("Epix");
         meta.description = "A CoreMod to inject into Waila method";
-        meta.url = "http://exz.me";
+        meta.url = "http://github.com/wohaopa/OmniOcular-Unofficial";
     }
 
     @Override

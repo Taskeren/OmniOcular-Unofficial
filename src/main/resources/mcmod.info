@@ -2,11 +2,11 @@
     {
         "modid": "${modId}",
         "name": "${modName}",
-        "description": "Omni Ocular",
+        "description": "Omni Ocular Unofficial",
         "version": "${modVersion}",
         "mcversion": "${minecraftVersion}",
         "logoFile": "",
-        "url": "http://exz.me",
+        "url": "http://github.com/wohaopa/OmniOcular-Unofficial",
         "updateUrl": "",
         "authorList": ["Epix"],
         "credits": "",
