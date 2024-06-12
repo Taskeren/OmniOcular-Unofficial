@@ -1,15 +1,11 @@
 package me.exz.omniocular;
 
-import java.util.Map;
-
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.event.FMLServerStartingEvent;
-import cpw.mods.fml.common.network.NetworkCheckHandler;
-import cpw.mods.fml.relauncher.Side;
 import me.exz.omniocular.proxy.CommonProxy;
 import me.exz.omniocular.reference.Reference;
 
@@ -44,11 +40,6 @@ public class OmniOcular {
     @Mod.EventHandler
     void onServerStart(FMLServerStartingEvent event) {
         proxy.onServerStart(event);
-    }
-
-    @NetworkCheckHandler
-    public static boolean check(Map<String, String> remote, Side side) {
-        return !(side == Side.SERVER && !remote.isEmpty() && !remote.containsKey(Reference.MOD_ID));
     }
 
 }
