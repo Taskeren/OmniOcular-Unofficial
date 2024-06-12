@@ -18,7 +18,6 @@ import net.minecraft.launchwrapper.Launch;
 import net.minecraft.launchwrapper.LaunchClassLoader;
 
 import cpw.mods.fml.common.FMLCommonHandler;
-import me.exz.omniocular.asm.Core;
 import me.exz.omniocular.util.LogHelper;
 
 public class ScriptEngineHandler {
@@ -73,7 +72,7 @@ public class ScriptEngineHandler {
             }
 
             if (!succeed) {
-                File jarFile = new File(Core.minecraftDir, "/mods/oo/nashorn-core-15.4.jar");
+                File jarFile = new File(Launch.minecraftHome, "/mods/oo/nashorn-core-15.4.jar");
                 LogHelper.info("Nashorn core path: " + jarFile);
                 if (!jarFile.exists() || !jarFile.isFile()) {
                     LogHelper.info("Nashorn core not exist!");

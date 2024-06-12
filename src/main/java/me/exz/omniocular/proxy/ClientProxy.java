@@ -5,13 +5,21 @@ import net.minecraftforge.client.ClientCommandHandler;
 import codechicken.nei.guihook.GuiContainerManager;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
+import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import me.exz.omniocular.client.command.CommandLookFor;
+import me.exz.omniocular.handler.ScriptEngineHandler;
 import me.exz.omniocular.handler.XMLConfigHandler;
 import me.exz.omniocular.util.LogHelper;
 import me.exz.omniocular.waila.TooltipHandler;
 
 @SuppressWarnings("UnusedDeclaration")
 public class ClientProxy extends CommonProxy {
+
+    @Override
+    public void preInit(FMLPreInitializationEvent event) {
+        super.preInit(event);
+        ScriptEngineHandler.initScriptEngineManager();
+    }
 
     @Override
     public void init(FMLInitializationEvent event) {

@@ -1,0 +1,13 @@
+{
+  "required": true,
+  "minVersion": "0.8.5-GTNH",
+  "package": "me.exz.omniocular.mixins",
+  "refmap": "mixins.OmniOcularUnofficial.refmap.json",
+  "target": "@env(DEFAULT)",
+  "compatibilityLevel": "JAVA_8",
+  "mixins": [
+    "MixinHUDHandlerFMP"
+  ],
+  "client": [],
+  "server": []
+}

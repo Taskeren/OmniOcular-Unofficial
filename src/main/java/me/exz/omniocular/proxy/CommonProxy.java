@@ -19,8 +19,6 @@ public class CommonProxy {
     public void preInit(FMLPreInitializationEvent event) {
         Config.initConfig(event);
         XMLConfigHandler.initConfigFiles(event);
-
-        // JSHandler.initEngine();
         XMLConfigMessageHandler.network
             .registerMessage(XMLConfigMessageHandler.class, XMLConfigMessage.class, 0, Side.CLIENT);
     }
