@@ -26,7 +26,7 @@ public class Core implements IFMLLoadingPlugin {
 
     @Override
     public String getModContainerClass() {
-        return CoreContainer.class.getName();
+        return null;
     }
 
     @Override
