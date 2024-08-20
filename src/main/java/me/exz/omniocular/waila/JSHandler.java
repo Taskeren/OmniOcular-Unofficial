@@ -169,7 +169,7 @@ public class JSHandler {
         try {
             engine.eval("var _JSHandler = Java.type('me.exz.omniocular.waila.JSHandler');");
             engine.eval("function translate(t){return _JSHandler.translate(t)}");
-            engine.eval("function translateFormatted(t,obj){return _JSHanlder.translateFormatted(t,obj)}");
+            engine.eval("function translateFormatted(t,obj){return _JSHandler.translateFormatted(t,obj)}");
             engine.eval("function name(n){return _JSHandler.getDisplayName(n.hashCode)}");
             engine.eval("function fluidName(n){return _JSHandler.getFluidName(n)}");
             engine.eval("function holding(){return _JSHandler.playerHolding()}");
