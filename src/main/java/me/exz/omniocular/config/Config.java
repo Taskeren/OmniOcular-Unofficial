@@ -1,7 +1,11 @@
 package me.exz.omniocular.config;
 
 import java.io.File;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 
+import net.minecraft.block.Block;
 import net.minecraftforge.common.config.Configuration;
 
 import cpw.mods.fml.client.event.ConfigChangedEvent;
@@ -19,6 +23,11 @@ public class Config {
     public static boolean enableTooltipInfo = true;
     public static boolean sendToClientXML = true;
 
+    private static String[] blackTileEntityNames = new String[0];
+    public static Set<Integer> blackTileEntity = new HashSet<>();
+
+    public static Set<String> blackEntity = new HashSet<>();
+
     @SubscribeEvent
     public void onConfigChangedEvent(ConfigChangedEvent.OnConfigChangedEvent event) {
         if (event.modID.equalsIgnoreCase(Reference.MOD_ID)) {
@@ -32,7 +41,7 @@ public class Config {
             .bus()
             .register(new Config());
 
-        config = new Configuration(new File(event.getModConfigurationDirectory(), Reference.OLD_MOD_ID + ".cfg"));
+        config = new Configuration(new File(event.getModConfigurationDirectory(), Reference.MOD_NAME + ".cfg"));
         loadConfig();
     }
 
@@ -61,8 +70,29 @@ public class Config {
             sendToClientXML,
             "Use the server-side XML configuration");
 
+        blackTileEntityNames = config.getStringList(
+            "blackTileEntityNames",
+            Configuration.CATEGORY_GENERAL,
+            blackTileEntityNames,
+            "Black TileEntity Names list");
+
+        String[] blackEntityNames = config.getStringList(
+            "blackEntityNames",
+            Configuration.CATEGORY_GENERAL,
+            new String[] { "net.minecraft.entity.player.EntityPlayer" },
+            "Black Entity Names list");
+
+        blackEntity.addAll(Arrays.asList(blackEntityNames));
+
         if (config.hasChanged()) {
             config.save();
+        }
+    }
+
+    public static void preprocess() {
+        for (String blackTileEntityName : blackTileEntityNames) {
+            Block block = Block.getBlockFromName(blackTileEntityName);
+            if (block != null) blackTileEntity.add(Block.getIdFromBlock(block));
         }
     }
 }

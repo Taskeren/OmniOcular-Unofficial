@@ -12,6 +12,7 @@ import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.util.MovingObjectPosition;
 
+import me.exz.omniocular.config.Config;
 import me.exz.omniocular.util.NBTHelper;
 
 public class CommandLookFor extends CommandBase {
@@ -33,6 +34,11 @@ public class CommandLookFor extends CommandBase {
 
     @Override
     public void processCommand(ICommandSender sender, String[] array) {
+        if (array.length == 1 && array[0].equals("reload")) {
+            Config.preprocess();
+            return;
+        }
+
         EntityPlayer player = (EntityPlayer) sender;
         Minecraft minecraft = Minecraft.getMinecraft();
         MovingObjectPosition objectMouseOver = minecraft.objectMouseOver;
@@ -52,8 +58,9 @@ public class CommandLookFor extends CommandBase {
                     .getBlock(objectMouseOver.blockX, objectMouseOver.blockY, objectMouseOver.blockZ);
                 player.addChatComponentMessage(
                     new ChatComponentTranslation(
-                        "Name: %s (%s)",
+                        "Name: %s (%s) Class: %s",
                         block.getLocalizedName(),
+                        Block.blockRegistry.getNameForObject(block),
                         block.getClass()
                             .getName()));
 

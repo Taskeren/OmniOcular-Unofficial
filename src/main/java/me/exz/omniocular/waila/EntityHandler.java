@@ -46,7 +46,10 @@ public class EntityHandler implements IWailaEntityProvider {
     @Override
     public List<String> getWailaBody(Entity entity, List<String> currenttip, IWailaEntityAccessor accessor,
         IWailaConfigHandler config) {
-        if (!Config.enableEntityInfo) return currenttip;
+        if (!Config.enableEntityInfo || Config.blackEntity.contains(
+            entity.getClass()
+                .getName()))
+            return currenttip;
 
         int id = entity.getEntityId();
         long currentTick = accessor.getWorld()

@@ -7,6 +7,7 @@ import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import me.exz.omniocular.client.command.CommandLookFor;
+import me.exz.omniocular.config.Config;
 import me.exz.omniocular.handler.ScriptEngineHandler;
 import me.exz.omniocular.handler.XMLConfigHandler;
 import me.exz.omniocular.util.LogHelper;
@@ -40,6 +41,7 @@ public class ClientProxy extends CommonProxy {
         super.postInit(event);
         GuiContainerManager.addTooltipHandler(new TooltipHandler());
         XMLConfigHandler.parseConfigFiles();
+        Config.preprocess();
     }
 
 }
