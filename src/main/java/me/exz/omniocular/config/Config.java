@@ -91,8 +91,18 @@ public class Config {
 
     public static void preprocess() {
         for (String blackTileEntityName : blackTileEntityNames) {
-            Block block = Block.getBlockFromName(blackTileEntityName);
-            if (block != null) blackTileEntity.add(Block.getIdFromBlock(block));
+            String[] ss = blackTileEntityName.split("@", 2);
+            Block block = Block.getBlockFromName(ss[0]);
+            if (block != null) {
+                if (ss.length == 2) {
+                    try {
+                        blackTileEntity.add(Block.getIdFromBlock(block) << 16 | Integer.parseInt(ss[1]));
+                    } catch (NumberFormatException ignored) {}
+                } else {
+                    blackTileEntity.add(Block.getIdFromBlock(block) << 16);
+                }
+
+            }
         }
     }
 }

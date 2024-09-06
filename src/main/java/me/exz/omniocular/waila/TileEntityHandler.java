@@ -61,7 +61,8 @@ public class TileEntityHandler implements IWailaDataProvider {
     @Override
     public List<String> getWailaBody(ItemStack itemStack, List<String> currenttip, IWailaDataAccessor accessor,
         IWailaConfigHandler config) {
-        if (!Config.enableTileEntityInfo || Config.blackTileEntity.contains(accessor.getBlockID())) return currenttip;
+        if (!Config.enableTileEntityInfo
+            || Config.blackTileEntity.contains(accessor.getBlockID() << 16 | accessor.getMetadata())) return currenttip;
 
         Item item = itemStack.getItem();
         int hashCode = item == null ? 0 : item.hashCode();

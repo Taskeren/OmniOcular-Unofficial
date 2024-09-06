@@ -58,9 +58,11 @@ public class CommandLookFor extends CommandBase {
                     .getBlock(objectMouseOver.blockX, objectMouseOver.blockY, objectMouseOver.blockZ);
                 player.addChatComponentMessage(
                     new ChatComponentTranslation(
-                        "Name: %s (%s) Class: %s",
+                        "Name: %s (%s@%s) Class: %s",
                         block.getLocalizedName(),
                         Block.blockRegistry.getNameForObject(block),
+                        player.getEntityWorld()
+                            .getBlockMetadata(objectMouseOver.blockX, objectMouseOver.blockY, objectMouseOver.blockZ),
                         block.getClass()
                             .getName()));
 
