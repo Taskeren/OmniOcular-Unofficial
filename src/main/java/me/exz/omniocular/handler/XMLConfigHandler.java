@@ -38,7 +38,7 @@ import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import me.exz.omniocular.OmniOcular;
 import me.exz.omniocular.reference.Reference;
 import me.exz.omniocular.util.LogHelper;
-import me.exz.omniocular.waila.JSHandler;
+import me.exz.omniocular.waila.JSEngine;
 
 @SuppressWarnings("CanBeFinal")
 public class XMLConfigHandler {
@@ -159,7 +159,7 @@ public class XMLConfigHandler {
 
     public static void parseConfigFiles() {
 
-        JSHandler.initEngine();
+        JSEngine.initEngine();
         entityPattern.clear();
         tileEntityPattern.clear();
         tooltipPattern.clear();
@@ -207,14 +207,14 @@ public class XMLConfigHandler {
                 NodeList initList = ((Element) ooList.item(i)).getElementsByTagName("init");
                 for (int j = 0; j < initList.getLength(); j++) {
                     Node node = initList.item(j);
-                    JSHandler.engine.eval(node.getTextContent());
+                    JSEngine.engine.eval(node.getTextContent());
                 }
                 NodeList configList = ((Element) ooList.item(i)).getElementsByTagName("setting");
                 for (int j = 0; j < configList.getLength(); j++) {
                     Node node = configList.item(j);
                     String settingText = node.getTextContent();
                     try {
-                        String settingResult = JSHandler.engine.eval(settingText.trim())
+                        String settingResult = JSEngine.engine.eval(settingText.trim())
                             .toString();
                         settingList.put(
                             node.getAttributes()

@@ -38,7 +38,7 @@ import me.exz.omniocular.util.LogHelper;
 import me.exz.omniocular.util.NBTHelper;
 
 @SuppressWarnings({ "CanBeFinal", "UnusedDeclaration" })
-public class JSHandler {
+public class JSEngine {
 
     public static ScriptEngine engine;
     public static HashSet<String> scriptSet = new HashSet<>();
@@ -70,7 +70,7 @@ public class JSHandler {
 
             try {
                 String json = "var nbt=" + NBTHelper.NBT2json(n) + ";";
-                JSHandler.engine.eval(json);
+                JSEngine.engine.eval(json);
             } catch (ScriptException e) {
                 e.printStackTrace();
             }
@@ -94,33 +94,28 @@ public class JSHandler {
                         for (int i = 0; i < lines.getLength(); i++) {
                             Node line = lines.item(i);
                             String displayname = "";
-                            if (line.getAttributes()
-                                .getNamedItem("displayname") != null
-                                && !line.getAttributes()
-                                    .getNamedItem("displayname")
-                                    .getTextContent()
-                                    .trim()
-                                    .isEmpty()) {
-                                displayname = StatCollector.translateToLocal(
-                                    line.getAttributes()
-                                        .getNamedItem("displayname")
-                                        .getTextContent());
+                            Node display = line.getAttributes()
+                                .getNamedItem("displayname");
+                            if (display != null && !display.getTextContent()
+                                .trim()
+                                .isEmpty()) {
+                                displayname = StatCollector.translateToLocal(display.getTextContent());
                             }
                             String functionContent = line.getTextContent();
                             String hash = "S" + NBTHelper.MD5(functionContent);
-                            if (!JSHandler.scriptSet.contains(hash)) {
-                                JSHandler.scriptSet.add(hash);
+                            if (!JSEngine.scriptSet.contains(hash)) {
+                                JSEngine.scriptSet.add(hash);
                                 if (!functionContent.contains("return")) {
                                     functionContent = "return " + functionContent.trim();
                                 }
                                 String script = "function " + hash + "()" + "{" + functionContent + "}";
                                 try {
-                                    JSHandler.engine.eval(script);
+                                    JSEngine.engine.eval(script);
                                 } catch (Exception e) {
                                     e.printStackTrace();
                                 }
                             }
-                            Invocable invoke = (Invocable) JSHandler.engine;
+                            Invocable invoke = (Invocable) JSEngine.engine;
                             try {
                                 String result = String.valueOf(invoke.invokeFunction(hash, ""));
                                 if (result.equals("__ERROR__") || result.equals("null")
@@ -167,15 +162,15 @@ public class JSHandler {
             engine.eval("load(\"nashorn:mozilla_compat.js\");");
         } catch (ScriptException ignored) {}
         try {
-            engine.eval("var _JSHandler = Java.type('me.exz.omniocular.waila.JSHandler');");
-            engine.eval("function translate(t){return _JSHandler.translate(t)}");
-            engine.eval("function translateFormatted(t,obj){return _JSHandler.translateFormatted(t,obj)}");
-            engine.eval("function name(n){return _JSHandler.getDisplayName(n.hashCode)}");
-            engine.eval("function fluidName(n){return _JSHandler.getFluidName(n)}");
-            engine.eval("function holding(){return _JSHandler.playerHolding()}");
-            engine.eval("function armor(i){return _JSHandler.playerArmor(i)}");
-            engine.eval("function isInHotbar(n){return _JSHandler.haveItemInHotbar(n)}");
-            engine.eval("function isInInv(n){return _JSHandler.haveItemInInventory(n)}");
+            engine.eval("var _JSEngine = Java.type('me.exz.omniocular.waila.JSEngine');");
+            engine.eval("function translate(t){return _JSEngine.translate(t)}");
+            engine.eval("function translateFormatted(t,obj){return _JSEngine.translateFormatted(t,obj)}");
+            engine.eval("function name(n){return _JSEngine.getDisplayName(n.hashCode)}");
+            engine.eval("function fluidName(n){return _JSEngine.getFluidName(n)}");
+            engine.eval("function holding(){return _JSEngine.playerHolding()}");
+            engine.eval("function armor(i){return _JSEngine.playerArmor(i)}");
+            engine.eval("function isInHotbar(n){return _JSEngine.haveItemInHotbar(n)}");
+            engine.eval("function isInInv(n){return _JSEngine.haveItemInInventory(n)}");
         } catch (ScriptException e) {
             e.printStackTrace();
         }

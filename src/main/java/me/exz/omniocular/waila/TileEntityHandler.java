@@ -15,6 +15,7 @@ import mcp.mobius.waila.api.IWailaConfigHandler;
 import mcp.mobius.waila.api.IWailaDataAccessor;
 import mcp.mobius.waila.api.IWailaDataProvider;
 import mcp.mobius.waila.api.IWailaRegistrar;
+import me.exz.omniocular.IScript;
 import me.exz.omniocular.config.Config;
 import me.exz.omniocular.handler.XMLConfigHandler;
 
@@ -73,9 +74,12 @@ public class TileEntityHandler implements IWailaDataProvider {
             lastTick = currentTick;
             lastItemStackHash = hashCode;
             NBTTagCompound n = accessor.getNBTData();
-            lastTps = n != null
-                ? JSHandler.getBody(XMLConfigHandler.tileEntityPattern, n, n.getString("id"), accessor.getPlayer())
-                : EMPTY_LIST;
+            if (n != null) {
+                lastTps = PluginEngine
+                    .getWailaBody(IScript.Type.TileEntity, n, n.getString("id"), accessor.getPlayer());
+                lastTps.addAll(
+                    JSEngine.getBody(XMLConfigHandler.tileEntityPattern, n, n.getString("id"), accessor.getPlayer()));
+            } else lastTps = EMPTY_LIST;
         }
 
         currenttip.addAll(lastTps);

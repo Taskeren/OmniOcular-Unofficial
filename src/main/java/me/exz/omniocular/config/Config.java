@@ -24,6 +24,7 @@ public class Config {
     public static boolean sendToClientXML = true;
 
     private static String[] blackTileEntityNames = new String[0];
+    public static String[] scriptClassName = new String[0];
     public static Set<Integer> blackTileEntity = new HashSet<>();
 
     public static Set<String> blackEntity = new HashSet<>();
@@ -81,6 +82,12 @@ public class Config {
             Configuration.CATEGORY_GENERAL,
             new String[] { "net.minecraft.entity.player.EntityPlayer" },
             "Black Entity Names list");
+
+        scriptClassName = config.getStringList(
+            "scriptClassName",
+            Configuration.CATEGORY_GENERAL,
+            new String[] {},
+            "The class name of the script written in java.");
 
         blackEntity.addAll(Arrays.asList(blackEntityNames));
 

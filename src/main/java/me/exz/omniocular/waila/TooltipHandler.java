@@ -9,6 +9,7 @@ import net.minecraft.nbt.NBTTagCompound;
 
 import codechicken.nei.guihook.GuiContainerManager;
 import codechicken.nei.guihook.IContainerTooltipHandler;
+import me.exz.omniocular.IScript;
 import me.exz.omniocular.config.Config;
 import me.exz.omniocular.handler.XMLConfigHandler;
 
@@ -34,15 +35,11 @@ public class TooltipHandler implements IContainerTooltipHandler {
             NBTTagCompound n = itemStack.getTagCompound();
 
             if (n != null) {
-                currenttip.addAll(
-                    1,
-                    JSHandler.getBody(
-                        XMLConfigHandler.tooltipPattern,
-                        n,
-                        Item.itemRegistry.getNameForObject(itemStack.getItem()),
-                        guiContainer.mc.thePlayer));
-
+                String id = Item.itemRegistry.getNameForObject(itemStack.getItem());
+                currenttip.addAll(PluginEngine.getWailaBody(IScript.Type.Tooltip, n, id, guiContainer.mc.thePlayer));
+                currenttip.addAll(JSEngine.getBody(XMLConfigHandler.tooltipPattern, n, id, guiContainer.mc.thePlayer));
             }
+
         }
         return currenttip;
     }
