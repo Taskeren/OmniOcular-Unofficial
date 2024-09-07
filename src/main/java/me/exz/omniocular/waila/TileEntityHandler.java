@@ -1,11 +1,9 @@
 package me.exz.omniocular.waila;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -15,32 +13,13 @@ import mcp.mobius.waila.api.IWailaConfigHandler;
 import mcp.mobius.waila.api.IWailaDataAccessor;
 import mcp.mobius.waila.api.IWailaDataProvider;
 import mcp.mobius.waila.api.IWailaRegistrar;
-import me.exz.omniocular.IScript;
-import me.exz.omniocular.config.Config;
-import me.exz.omniocular.handler.XMLConfigHandler;
 
 public class TileEntityHandler implements IWailaDataProvider {
 
     @SuppressWarnings("UnusedDeclaration")
     public static void callbackRegister(IWailaRegistrar registrar) {
         TileEntityHandler instance = new TileEntityHandler();
-        registrar.registerBodyProvider(instance, Block.class);
         registrar.registerNBTProvider(instance, Block.class);
-        // for (Object o : TileEntity.nameToClassMap.entrySet()) {
-        // Map.Entry entry = (Map.Entry) o;
-        // String key = (String) entry.getKey();
-        // Boolean isBlackListed = false;
-        // for (String blackItem : Reference.blackList) {
-        // if (key.equals(blackItem)) {
-        // isBlackListed = true;
-        // break;
-        // }
-        // }
-        // if (!isBlackListed) {
-        // registrar.registerBodyProvider(instance, (Class) entry.getValue());
-        // registrar.registerNBTProvider(instance, (Class) entry.getValue());
-        // }
-        // }
     }
 
     @Override
@@ -54,36 +33,9 @@ public class TileEntityHandler implements IWailaDataProvider {
         return currenttip;
     }
 
-    private int lastItemStackHash;
-    private List<String> lastTps;
-    private long lastTick;
-    private static final List<String> EMPTY_LIST = new ArrayList<>();
-
     @Override
     public List<String> getWailaBody(ItemStack itemStack, List<String> currenttip, IWailaDataAccessor accessor,
         IWailaConfigHandler config) {
-        if (!Config.enableTileEntityInfo
-            || Config.blackTileEntity.contains(accessor.getBlockID() << 16 | itemStack.getItemDamage()))
-            return currenttip;
-
-        Item item = itemStack.getItem();
-        int hashCode = item == null ? 0 : item.hashCode();
-        long currentTick = accessor.getWorld()
-            .getTotalWorldTime();
-
-        if (hashCode != lastItemStackHash || currentTick - lastTick > 10) {
-            lastTick = currentTick;
-            lastItemStackHash = hashCode;
-            NBTTagCompound n = accessor.getNBTData();
-            if (n != null) {
-                lastTps = PluginEngine
-                    .getWailaBody(IScript.Type.TileEntity, n, n.getString("id"), accessor.getPlayer());
-                lastTps.addAll(
-                    JSEngine.getBody(XMLConfigHandler.tileEntityPattern, n, n.getString("id"), accessor.getPlayer()));
-            } else lastTps = EMPTY_LIST;
-        }
-
-        currenttip.addAll(lastTps);
         return currenttip;
     }
 
