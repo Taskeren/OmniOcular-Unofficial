@@ -75,19 +75,19 @@ public class Config {
             "blackTileEntityNames",
             Configuration.CATEGORY_GENERAL,
             blackTileEntityNames,
-            "Black TileEntity Names list");
+            "Black TileEntity Names list. as: minecraft:furnace@0");
 
         String[] blackEntityNames = config.getStringList(
             "blackEntityNames",
             Configuration.CATEGORY_GENERAL,
             new String[] { "net.minecraft.entity.player.EntityPlayer" },
-            "Black Entity Names list");
+            "Black Entity Names list. as: net.minecraft.entity.player.EntityPlayer");
 
         scriptClassName = config.getStringList(
             "scriptClassName",
             Configuration.CATEGORY_GENERAL,
             new String[] {},
-            "The class name of the script written in java.");
+            "The class name of the script written in java. as: me.exz.omniocular.scripts.GTNHScript");
 
         blackEntity.addAll(Arrays.asList(blackEntityNames));
 
