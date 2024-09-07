@@ -21,6 +21,7 @@ public class Config {
     public static boolean enableFMPInfo = true;
     public static boolean enableTileEntityInfo = true;
     public static boolean enableTooltipInfo = true;
+    public static boolean forceUseClientXml = false;
     public static boolean sendToClientXML = true;
 
     private static String[] blackTileEntityNames = new String[0];
@@ -70,6 +71,11 @@ public class Config {
             Configuration.CATEGORY_GENERAL,
             sendToClientXML,
             "Use the server-side XML configuration");
+        forceUseClientXml = config.getBoolean(
+            "forceUseClientXml",
+            Configuration.CATEGORY_GENERAL,
+            forceUseClientXml,
+            "Force client-side XML configuration");
 
         blackTileEntityNames = config.getStringList(
             "blackTileEntityNames",

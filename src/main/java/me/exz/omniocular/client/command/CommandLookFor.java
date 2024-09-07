@@ -1,17 +1,21 @@
 package me.exz.omniocular.client.command;
 
+import java.util.Arrays;
+import java.util.List;
+
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.Item;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.util.MovingObjectPosition;
 
+import mcp.mobius.waila.api.impl.DataAccessorCommon;
 import me.exz.omniocular.config.Config;
 import me.exz.omniocular.util.NBTHelper;
 
@@ -19,7 +23,7 @@ public class CommandLookFor extends CommandBase {
 
     @Override
     public String getCommandName() {
-        return "ool";
+        return "oo";
     }
 
     @Override
@@ -29,7 +33,7 @@ public class CommandLookFor extends CommandBase {
 
     @Override
     public String getCommandUsage(ICommandSender sender) {
-        return "/ool";
+        return "/oo";
     }
 
     @Override
@@ -38,6 +42,7 @@ public class CommandLookFor extends CommandBase {
             Config.preprocess();
             return;
         }
+        boolean displayNBT = (array.length == 1 && array[0].equals("nbt"));
 
         EntityPlayer player = (EntityPlayer) sender;
         Minecraft minecraft = Minecraft.getMinecraft();
@@ -54,35 +59,42 @@ public class CommandLookFor extends CommandBase {
             }
 
             case BLOCK: {
-                Block block = player.getEntityWorld()
-                    .getBlock(objectMouseOver.blockX, objectMouseOver.blockY, objectMouseOver.blockZ);
+                Block block = DataAccessorCommon.instance.getBlock();
+
                 player.addChatComponentMessage(
                     new ChatComponentTranslation(
                         "Name: %s (%s@%s) Class: %s",
-                        block.getLocalizedName(),
+                        DataAccessorCommon.instance.getBlockQualifiedName(),
                         Block.blockRegistry.getNameForObject(block),
-                        player.getEntityWorld()
-                            .getBlockMetadata(objectMouseOver.blockX, objectMouseOver.blockY, objectMouseOver.blockZ),
+                        DataAccessorCommon.instance.getMetadata(),
                         block.getClass()
-                            .getName()));
+                            .getName()
+                        ));
+                player.addChatComponentMessage(
+                    new ChatComponentTranslation(
+                        "ItemStack: %s (%s@%s)",
+                        DataAccessorCommon.instance.stack.getDisplayName(),
+                        Item.getIdFromItem(DataAccessorCommon.instance.stack.getItem()),
+                        DataAccessorCommon.instance.stack.getItemDamage()));
 
-                TileEntity tileEntity = player.getEntityWorld()
-                    .getTileEntity(objectMouseOver.blockX, objectMouseOver.blockY, objectMouseOver.blockZ);
-                if (tileEntity != null) {
-                    NBTTagCompound nbtTagCompound = new NBTTagCompound();
-                    tileEntity.writeToNBT(nbtTagCompound);
-                    player.addChatComponentMessage(
-                        new ChatComponentTranslation(
-                            "TE: %s",
-                            tileEntity.getClass()
-                                .getName()));
-                    String[] lines = NBTHelper.NBT2jsonPrettyPrinting(nbtTagCompound)
-                        .split("\n");
-                    player.addChatComponentMessage(new ChatComponentText("NBT:"));
-                    for (String line : lines) {
-                        player.addChatComponentMessage(new ChatComponentText(line));
+                if (displayNBT) {
+                    NBTTagCompound nbtTagCompound = DataAccessorCommon.instance.getNBTData();
+                    if (nbtTagCompound != null) {
+                        player.addChatComponentMessage(
+                            new ChatComponentTranslation(
+                                "TE class: %s(%s)",
+                                DataAccessorCommon.instance.getTileEntity()
+                                    .getClass()
+                                    .getName(),
+                                DataAccessorCommon.instance.getTileEntity()
+                                    .getBlockMetadata()));
+                        String[] lines = NBTHelper.NBT2jsonPrettyPrinting(nbtTagCompound)
+                            .split("\n");
+                        player.addChatComponentMessage(new ChatComponentText("NBT:"));
+                        for (String line : lines) {
+                            player.addChatComponentMessage(new ChatComponentText(line));
+                        }
                     }
-
                 }
                 break;
             }
@@ -90,6 +102,17 @@ public class CommandLookFor extends CommandBase {
                 player.addChatComponentMessage(new ChatComponentTranslation("omniocular.info.NotPointing"));
 
         }
+
+    }
+
+    @Override
+    public List<String> addTabCompletionOptions(ICommandSender sender, String[] args) {
+        if (args.length == 1) {
+            if ("reload".startsWith(args[0])) return Arrays.asList("reload");
+            else if ("nbt".startsWith(args[0])) return Arrays.asList("nbt");
+        }
+
+        return Arrays.asList("reload", "nbt");
 
     }
 }

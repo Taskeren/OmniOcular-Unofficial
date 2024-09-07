@@ -7,6 +7,7 @@ import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 import cpw.mods.fml.common.network.simpleimpl.SimpleNetworkWrapper;
+import me.exz.omniocular.config.Config;
 import me.exz.omniocular.handler.XMLConfigHandler;
 import me.exz.omniocular.reference.Reference;
 import me.exz.omniocular.util.LogHelper;
@@ -40,6 +41,7 @@ public class XMLConfigMessageHandler implements IMessageHandler<XMLConfigMessage
     }
 
     private static void recvConfigString(String string) {
+        if (Config.forceUseClientXml) return;
         switch (string) {
             case "__START__" -> XMLConfigHandler.stringBuilder = new StringBuilder();
             case "__END__" -> {
