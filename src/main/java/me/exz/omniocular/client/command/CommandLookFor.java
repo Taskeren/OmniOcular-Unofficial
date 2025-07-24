@@ -68,8 +68,7 @@ public class CommandLookFor extends CommandBase {
                         Block.blockRegistry.getNameForObject(block),
                         DataAccessorCommon.instance.getMetadata(),
                         block.getClass()
-                            .getName()
-                        ));
+                            .getName()));
                 player.addChatComponentMessage(
                     new ChatComponentTranslation(
                         "ItemStack: %s (%s@%s)",
