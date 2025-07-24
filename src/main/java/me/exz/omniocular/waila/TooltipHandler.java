@@ -7,6 +7,9 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import codechicken.nei.guihook.GuiContainerManager;
 import codechicken.nei.guihook.IContainerTooltipHandler;
 import me.exz.omniocular.IScript;
@@ -14,6 +17,8 @@ import me.exz.omniocular.config.Config;
 import me.exz.omniocular.handler.XMLConfigHandler;
 
 public class TooltipHandler implements IContainerTooltipHandler {
+
+    private static final Logger LOG = LogManager.getLogger();
 
     @Override
     public List<String> handleTooltip(GuiContainer guiContainer, int i, int i2, List<String> strings) {
@@ -27,20 +32,33 @@ public class TooltipHandler implements IContainerTooltipHandler {
     }
 
     @Override
-    public List<String> handleItemTooltip(GuiContainer guiContainer, ItemStack itemStack, int i, int i2,
-        List<String> currenttip) {
-        if (!Config.enableTooltipInfo) return currenttip;
+    public List<String> handleItemTooltip(GuiContainer guiContainer, ItemStack itemStack, int mouseX, int mouseY,
+        List<String> tooltips) {
+        if (!Config.enableTooltipInfo) return tooltips;
 
-        if (guiContainer != null && GuiContainerManager.shouldShowTooltip(guiContainer) && itemStack != null) {
-            NBTTagCompound n = itemStack.getTagCompound();
-
-            if (n != null) {
-                String id = Item.itemRegistry.getNameForObject(itemStack.getItem());
-                currenttip.addAll(PluginEngine.getWailaBody(IScript.Type.Tooltip, n, id, guiContainer.mc.thePlayer));
-                currenttip.addAll(JSEngine.getBody(XMLConfigHandler.tooltipPattern, n, id, guiContainer.mc.thePlayer));
+        if (GuiContainerManager.shouldShowTooltip(guiContainer) && itemStack != null) {
+            try {
+                NBTTagCompound itemTags = itemStack.getTagCompound();
+                if (itemTags != null) {
+                    String itemId = Item.itemRegistry.getNameForObject(itemStack.getItem());
+                    if (itemId != null) { // FIX: ThaumcraftNEIPlugin will add items, but if it's not on the server, the
+                                          // itemId is null.
+                        tooltips.addAll(
+                            PluginEngine
+                                .getWailaBody(IScript.Type.Tooltip, itemTags, itemId, guiContainer.mc.thePlayer));
+                        tooltips.addAll(
+                            JSEngine
+                                .getBody(XMLConfigHandler.tooltipPattern, itemTags, itemId, guiContainer.mc.thePlayer));
+                    }
+                }
+            } catch (Exception e) {
+                LOG.warn(
+                    "Exception occurred while rendering extra tooltips for {} (tag={})",
+                    itemStack,
+                    itemStack.getTagCompound(),
+                    e);
             }
-
         }
-        return currenttip;
+        return tooltips;
     }
 }
